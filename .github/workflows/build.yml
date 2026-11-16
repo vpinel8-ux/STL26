@@ -10,7 +10,7 @@ jobs:
       - name: Adresse du site dans l'appli
         run: |
           OWNER=$(echo "${{ github.repository_owner }}" | tr 'A-Z' 'a-z')
-          REPO=$(echo "${{ github.event.repository.name }}" | tr "A-Z" "a-z")
+          REPO="${{ github.event.repository.name }}"
           sed -i "s#__SITE_URL__#https://${OWNER}.github.io/${REPO}/#" app/src/main/java/fr/vincent/saintelyon/MainActivity.java
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 17 }

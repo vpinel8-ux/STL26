@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.webkit.WebResourceError;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -30,6 +31,12 @@ public class MainActivity extends Activity {
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
         s.setAllowFileAccess(true);
         web.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedHttpError(WebView v, WebResourceRequest r, WebResourceResponse e) {
+                // Page introuvable (404...) : copie embarquée
+                if (r.isForMainFrame() && e.getStatusCode() >= 400 && !r.getUrl().toString().startsWith("file:")) v.loadUrl(FALLBACK);
+            }
+
             @Override
             public void onReceivedError(WebView v, WebResourceRequest r, WebResourceError e) {
                 // Pas de réseau et rien en cache : on ouvre la copie embarquée
