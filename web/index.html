@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Saintelyon 2026 — Vincent</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --night: #0a0e1a;
+  --night-2: #111827;
+  --night-3: #1e2740;
+  --trail: #3b82f6;
+  --gold: #f59e0b;
+  --green: #10b981;
+  --red: #ef4444;
+  --purple: #8b5cf6;
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --border: rgba(255,255,255,0.08);
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--night); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+
+/* HERO */
+.hero { background: linear-gradient(135deg, var(--night-3) 0%, #0f1729 100%); padding: 32px 20px 24px; padding-top: calc(32px + env(safe-area-inset-top, 0px)); text-align: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); width: 300px; height: 300px; background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%); pointer-events: none; }
+.hero-label { font-size: 11px; letter-spacing: 0.12em; color: var(--trail); text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
+.hero-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(28px, 8vw, 42px); font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
+.hero-sub { color: var(--text-dim); font-size: 14px; margin-bottom: 24px; }
+.countdown-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 340px; margin: 0 auto; }
+.countdown-box { background: var(--night-2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 8px; }
+.countdown-num { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: var(--trail); line-height: 1; }
+.countdown-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+
+/* NAV */
+.nav { display: flex; overflow-x: auto; gap: 4px; padding: 10px 16px; background: var(--night-2); border-bottom: 1px solid var(--border); scrollbar-width: none; position: sticky; top: 0; z-index: 100; }
+.nav::-webkit-scrollbar { display: none; }
+.nav-btn { flex-shrink: 0; padding: 7px 13px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); font-size: 12px; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.nav-btn.active { background: var(--trail); border-color: var(--trail); color: #fff; font-weight: 500; }
+
+/* SECTIONS */
+.section { display: none; padding: 16px; max-width: 600px; margin: 0 auto; }
+.section.active { display: block; }
+
+/* CARDS */
+.card { background: var(--night-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+.card-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+.badge-blue { background: rgba(59,130,246,0.2); color: var(--trail); }
+.badge-green { background: rgba(16,185,129,0.2); color: var(--green); }
+.badge-gold { background: rgba(245,158,11,0.2); color: var(--gold); }
+.badge-red { background: rgba(239,68,68,0.2); color: var(--red); }
+.badge-purple { background: rgba(139,92,246,0.2); color: var(--purple); }
+
+/* TABLE */
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th { text-align: left; color: var(--text-dim); font-weight: 500; padding: 6px 8px; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+.table td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+.table tr:last-child td { border-bottom: none; }
+
+/* STAT ROW */
+.stat-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+.stat-row:last-child { border-bottom: none; }
+.stat-label { color: var(--text-dim); }
+.stat-value { font-weight: 600; text-align: right; }
+
+/* CHECKLIST */
+.check-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); cursor: pointer; }
+.check-item:last-child { border-bottom: none; }
+.check-box { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border); background: transparent; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; margin-top: 1px; }
+.check-item.checked .check-box { background: var(--green); border-color: var(--green); }
+.check-item.checked .check-box::after { content: '✓'; color: #fff; font-size: 12px; font-weight: 700; }
+.check-item.checked .check-text { color: var(--text-dim); text-decoration: line-through; }
+.check-text { font-size: 13px; flex: 1; line-height: 1.4; }
+.check-link { font-size: 11px; color: var(--trail); text-decoration: none; display: inline-block; margin-top: 3px; }
+.check-link:hover { text-decoration: underline; }
+.check-price { font-size: 11px; color: var(--gold); font-weight: 600; white-space: nowrap; }
+.check-category { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin: 16px 0 8px; font-weight: 500; }
+
+/* PROGRAMME */
+.week-block { margin-bottom: 16px; }
+.week-header { font-size: 12px; font-weight: 600; color: var(--trail); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.day-row { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.day-row:last-child { border-bottom: none; }
+.day-name { font-size: 12px; color: var(--text-dim); width: 36px; flex-shrink: 0; padding-top: 3px; }
+.day-content { flex: 1; }
+.day-title { font-size: 13px; font-weight: 500; }
+.day-detail { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.day-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+
+/* NUTRITION ROW */
+.nutrition-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+.nutrition-row:last-child { border-bottom: none; }
+.nutrition-km { color: var(--trail); font-weight: 600; width: 44px; flex-shrink: 0; font-size: 12px; }
+.nutrition-time { color: var(--text-dim); font-size: 11px; width: 44px; flex-shrink: 0; }
+.nutrition-action { flex: 1; line-height: 1.4; }
+.nutrition-icon { font-size: 15px; width: 22px; text-align: center; flex-shrink: 0; }
+.phase-header { background: var(--night-3); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center; }
+.phase-header:first-child { margin-top: 0; }
+.phase-name { font-size: 13px; font-weight: 600; }
+.phase-meta { font-size: 11px; color: var(--text-dim); }
+
+/* STRATÉGIE */
+.strat-block { border-left: 3px solid var(--trail); padding-left: 14px; margin-bottom: 16px; }
+.strat-block.gold { border-color: var(--gold); }
+.strat-block.green { border-color: var(--green); }
+.strat-block.red { border-color: var(--red); }
+.strat-phase { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 4px; }
+.strat-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.strat-desc { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+
+/* FC */
+.fc-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.fc-label { font-size: 12px; color: var(--text-dim); width: 80px; }
+.fc-bar { flex: 1; background: var(--night-3); border-radius: 100px; height: 6px; }
+.fc-fill { height: 100%; border-radius: 100px; }
+.fc-value { font-size: 12px; font-weight: 600; width: 55px; text-align: right; }
+
+/* OBJ BAR */
+.obj-bar { background: var(--night-3); border-radius: 100px; height: 8px; margin-top: 8px; overflow: hidden; }
+.obj-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--trail), var(--green)); }
+
+/* RAVITO CARDS */
+.ravito-card { background: var(--night-3); border-radius: 10px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); }
+.ravito-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.ravito-name { font-size: 14px; font-weight: 700; }
+.ravito-info { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.ravito-barrier { font-size: 12px; font-weight: 600; color: var(--red); text-align: right; }
+.ravito-barrier-label { font-size: 10px; color: var(--text-dim); }
+.ravito-field { margin-bottom: 8px; }
+.ravito-field-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.ravito-input { width: 100%; background: var(--night-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 13px; outline: none; transition: border-color 0.15s; }
+.ravito-input:focus { border-color: var(--trail); }
+.ravito-input::placeholder { color: var(--text-dim); }
+.ravito-items { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.ravito-item-tag { font-size: 12px; padding: 4px 10px; border-radius: 20px; background: rgba(59,130,246,0.15); color: var(--trail); border: 1px solid rgba(59,130,246,0.3); cursor: pointer; transition: all 0.15s; user-select: none; }
+.ravito-item-tag.selected { background: var(--trail); color: #fff; }
+.ravito-arrival { font-size: 13px; font-weight: 600; color: var(--green); margin-top: 8px; }
+
+/* TRACKER */
+.tracker-card { background: var(--night-3); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+.tracker-point { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); cursor: pointer; }
+.tracker-point:last-child { border-bottom: none; }
+.tracker-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; transition: all 0.15s; }
+.tracker-point.passed .tracker-dot { background: var(--green); border-color: var(--green); }
+.tracker-point.current .tracker-dot { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 8px rgba(245,158,11,0.5); }
+.tracker-km { font-size: 12px; color: var(--trail); font-weight: 600; width: 40px; flex-shrink: 0; }
+.tracker-name { flex: 1; font-size: 13px; font-weight: 500; }
+.tracker-barrier { font-size: 11px; color: var(--text-dim); }
+.tracker-time { font-size: 12px; font-weight: 600; }
+.tracker-time.ok { color: var(--green); }
+.tracker-time.warning { color: var(--gold); }
+.tracker-time.danger { color: var(--red); }
+
+/* ALERT BOX */
+.alert { padding: 12px 14px; border-radius: 10px; margin-bottom: 12px; font-size: 13px; line-height: 1.5; }
+.alert-warning { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: var(--gold); }
+.alert-info { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: var(--trail); }
+.alert-danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
+.alert-success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--green); }
+
+/* PROFIL ALTIMÉTRIQUE */
+.profile-container { position: relative; height: 120px; margin: 8px 0 16px; }
+.profile-svg { width: 100%; height: 100%; }
+
+/* INPUT TIME */
+.time-input-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.time-input { background: var(--night-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; width: 120px; outline: none; }
+.time-input:focus { border-color: var(--trail); }
+.btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; transition: all 0.15s; }
+.btn-primary { background: var(--trail); color: #fff; }
+.btn-primary:hover { background: var(--trail-dim, #1d4ed8); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
+
+/* METEO */
+.meteo-link { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--night-3); border-radius: 10px; text-decoration: none; color: var(--text); margin-bottom: 8px; border: 1px solid var(--border); transition: border-color 0.15s; }
+.meteo-link:hover { border-color: var(--trail); }
+.meteo-icon { font-size: 24px; }
+.meteo-info { flex: 1; }
+.meteo-title { font-size: 13px; font-weight: 600; }
+.meteo-desc { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.meteo-arrow { color: var(--text-dim); }
+
+/* ACHAT */
+.achat-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.achat-item:last-child { border-bottom: none; }
+.achat-check { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; margin-top: 1px; }
+.achat-item.bought .achat-check { background: var(--green); border-color: var(--green); }
+.achat-item.bought .achat-check::after { content: '✓'; color: #fff; font-size: 12px; font-weight: 700; }
+.achat-item.bought .achat-name { text-decoration: line-through; color: var(--text-dim); }
+.achat-content { flex: 1; }
+.achat-name { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+.achat-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.achat-link { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); color: var(--trail); text-decoration: none; background: rgba(59,130,246,0.1); transition: all 0.15s; }
+.achat-link:hover { background: var(--trail); color: #fff; }
+.achat-price { font-size: 12px; color: var(--gold); font-weight: 600; white-space: nowrap; }
+.achat-priority { font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 6px; }
+.priority-high { background: rgba(239,68,68,0.2); color: var(--red); }
+.priority-med { background: rgba(245,158,11,0.2); color: var(--gold); }
+.achat-category { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin: 16px 0 8px; font-weight: 500; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+/* PROGRESS BAR */
+.progress-bar { background: var(--night-3); border-radius: 100px; height: 6px; margin-top: 6px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 100px; background: var(--green); transition: width 0.3s; }
+
+/* SAVE INDICATOR */
+.save-indicator { font-size: 11px; color: var(--green); opacity: 0; transition: opacity 0.3s; margin-left: 8px; }
+.save-indicator.show { opacity: 1; }
+.scen-btn{flex:1;padding:8px 6px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-dim);font-size:12px;cursor:pointer;font-family:inherit;line-height:1.3}.scen-btn.active{background:var(--trail);border-color:var(--trail);color:#fff}
+
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:200;display:flex;background:var(--night-2);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabbar button{flex:1;background:none;border:0;color:var(--text-dim);padding:9px 2px 8px;font-size:10px;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tabbar button span{font-size:19px;line-height:1}
+.tabbar button.active{color:var(--trail);font-weight:600}
+#subnav:empty{display:none}
+.card.collapsible>.card-title{cursor:pointer;margin-bottom:0;justify-content:flex-start}
+.card.collapsible>.card-title::after{content:'▾';margin-left:auto;color:var(--text-dim);transition:transform .15s}
+.card.collapsible.closed>.card-title::after{transform:rotate(-90deg)}
+.card.collapsible>.cbody{margin-top:12px}
+.card.collapsible.closed>.cbody{display:none}
+details.past{margin-bottom:10px;background:var(--night-3);border-radius:10px;padding:10px 12px}
+details.past summary{cursor:pointer;font-size:13px;color:var(--text-dim)}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.quick button{padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--night-3);color:var(--text);font-size:13px;font-family:inherit}
+.todo-item{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
+.todo-item input{width:18px;height:18px}
+.todo-item.done span{text-decoration:line-through;color:var(--text-dim)}
+.nd{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
+.nd:last-child{border:0}.nd b{display:inline-block;min-width:54px;margin-right:8px;color:var(--trail)}
+.nd.today b{color:var(--gold)}.nd small{display:block;color:var(--text-dim);margin-left:62px;font-size:12px}
+
+/* LISIBILITÉ */
+:root{--text-dim:#b4c0d3}
+body{font-size:16px;line-height:1.55}
+.section{padding:14px 14px 24px}
+.card{padding:16px 16px;margin-bottom:14px}
+.card-title{font-size:17px;line-height:1.3}
+.table{font-size:15px}.table td,.table th{padding:10px 6px;line-height:1.45}
+.stat-row{font-size:15px;flex-wrap:wrap;gap:2px 12px;padding:11px 0}
+.stat-label{flex:0 0 auto}
+.stat-value{font-size:15px!important;flex:1 1 55%;min-width:0}
+.alert{font-size:15px!important;line-height:1.55}
+.day-title{font-size:16px!important}.day-detail{font-size:14px!important;line-height:1.5}
+.day-name{font-size:14px!important}
+[style*="font-size:12px"]{font-size:14px!important}
+[style*="font-size:11px"]{font-size:13px!important}
+[style*="font-size:10px"]{font-size:12px!important}
+.badge{font-size:12px}
+.nav-btn{font-size:14px;padding:9px 15px}
+.tabbar button{font-size:12px;padding:10px 2px 9px}
+.tabbar button span{font-size:22px}
+.todo-item,.nd{font-size:15px}.nd small{font-size:14px}
+.quick button{font-size:15px;padding:14px}
+.card.collapsible>.card-title{flex-wrap:nowrap}.card.collapsible>.card-title::after{flex:0 0 auto}
+</style>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a0e1a"></head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">72e édition · Préparation personnalisée</div>
+  <h1 class="hero-title">Saintelyon 2026</h1>
+  <p class="hero-sub">Saint-Étienne → Lyon · 80,6 km · 23h30 · Vincent</p>
+  <div class="countdown-grid">
+    <div class="countdown-box"><div class="countdown-num" id="cd-j">--</div><div class="countdown-label">Jours</div></div>
+    <div class="countdown-box"><div class="countdown-num" id="cd-h">--</div><div class="countdown-label">Heures</div></div>
+    <div class="countdown-box"><div class="countdown-num" id="cd-m">--</div><div class="countdown-label">Min</div></div>
+    <div class="countdown-box"><div class="countdown-num" id="cd-s">--</div><div class="countdown-label">Sec</div></div>
+  </div>
+</div>
+
+<nav class="nav" id="subnav"></nav>
+<div class="tabbar" id="tabbar"></div>
+
+<section id="accueil" class="section active">
+  <div class="card"><div class="card-title">🗓️ Prochains jours</div><div id="next-days"></div></div>
+  <div class="card"><div class="card-title">✅ À faire avant le 28</div><div id="todo"></div></div>
+  <div class="card"><div class="card-title">🎯 Course en un coup d'œil</div>
+    <div class="stat-row"><div class="stat-label">Départ</div><div class="stat-value" style="font-size:12px">Sam 28 nov · 23h30 · Parc Expo St-Étienne</div></div>
+    <div class="stat-row"><div class="stat-label">Objectif</div><div class="stat-value" style="font-size:12px">10h45 (fourchette 10h30 → 11h15)</div></div>
+    <div class="stat-row"><div class="stat-label">Allure</div><div class="stat-value" style="font-size:12px">7'30 → 8'30"/km</div></div>
+    <div class="stat-row"><div class="stat-label">FC</div><div class="stat-value" style="font-size:12px">125-132 · alarme 132 · marche si &gt; 135 en montée</div></div>
+    <div class="stat-row"><div class="stat-label">Glucides</div><div class="stat-value" style="font-size:12px">45-60 g/h · une prise toutes les 40-45 min</div></div>
+    <div class="stat-row"><div class="stat-label">Barrière finale</div><div class="stat-value" style="font-size:12px">16h30 à Lyon</div></div>
+    <div class="stat-row"><div class="stat-label">Urgence course</div><div class="stat-value" style="font-size:12px">09 72 45 60 02</div></div>
+    <div class="alert alert-danger" style="margin:10px 0 0">🚫 Assistance perso aux ravitos interdite · bâtons interdits · pas de déchet à +100 m d'un ravito</div>
+  </div>
+  <div class="card"><div class="card-title">⚡ Accès rapide</div><div class="quick">
+    <button onclick="show('strategie')">🎯 Stratégie</button><button onclick="show('parcours')">⏱️ Plan de passage</button><button onclick="show('ravitos')">⛺ Ravitos</button><button onclick="show('nutrition')">🍯 Nutrition</button><button onclick="show('hydratation')">🥤 Boire</button><button onclick="show('materiel')">🎒 Matériel</button>
+  </div></div>
+</section>
+
+<!-- ═══════════════════════════════════ PLANNING ═══════════════════════════════════ -->
+<section id="planning" class="section">
+
+  
+  
+  <div class="card">
+    <div class="card-title">📅 Programme semaines</div>
+    <details class="past"><summary>✅ Semaines passées (26 oct → 15 nov)</summary><div class="week-block"><div class="week-header">Sem 1 — 26 oct → 1 nov · Récupération</div><div class="day-row"><div class="day-name">Lun 26</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos 🛋️</div><div class="day-detail">Récupération back to back 50 km</div></div></div><div class="day-row"><div class="day-name">Mar 27</div><div class="day-dot" style="background:var(--trail)"></div><div class="day-content"><div class="day-title">Hockey 🏒 ✅ fait</div></div></div><div class="day-row"><div class="day-name">Mer 28</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos</div></div></div><div class="day-row"><div class="day-name">Jeu 29</div><div class="day-dot" style="background:var(--trail)"></div><div class="day-content"><div class="day-title">Hockey 🏒 ✅ fait</div></div></div><div class="day-row"><div class="day-name">Ven 30</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos · semaine fatigante</div><div class="day-detail">Dernière longue annulée ce week-end · sommeil et récupération</div></div></div><div class="day-row"><div class="day-name">Sam 31</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos (pas de course ce week-end)</div><div class="day-detail">Match non joué</div></div></div><div class="day-row"><div class="day-name">Dim 1</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos (Toussaint)</div></div></div></div><div class="week-block"><div class="week-header">Sem 2 — 2 → 8 nov · Maintien</div><div class="day-row"><div class="day-name">Lun 2</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos</div></div></div><div class="day-row"><div class="day-name">Mar 3</div><div class="day-dot" style="background:var(--trail)"></div><div class="day-content"><div class="day-title">Hockey 🏒 ou endurance</div><div class="day-detail">50 min · FC &lt; 132 bpm</div></div></div><div class="day-row"><div class="day-name">Mer 4</div><div class="day-dot" style="background:var(--trail)"></div><div class="day-content"><div class="day-title">Endurance Z2</div><div class="day-detail">50 min · FC &lt; 132 bpm · seulement si tu es reposé</div></div></div><div class="day-row"><div class="day-name">Jeu 5</div><div class="day-dot" style="background:var(--trail)"></div><div class="day-content"><div class="day-title">Footing très léger 30 min ou repos</div><div class="day-detail">Veille de longue · FC &lt; 125 · fractionné annulé</div></div></div><div class="day-row"><div class="day-name">Ven 6</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos ou footing très léger 30 min</div><div class="day-detail">Longue annulée · FC &lt; 125 · seulement si tu en as envie</div></div></div><div class="day-row"><div class="day-name">Sam 7</div><div class="day-dot" style="background:var(--purple)"></div><div class="day-content"><div class="day-title">🏒 MATCH Grenoble (dom.) · 19h30</div><div class="day-detail">Lendemain de la longue : jouer à ~70 % ou renoncer selon les jambes</div></div></div><div class="day-row"><div class="day-name">Dim 8</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos</div><div class="day-detail">Récupération avant la dernière longue</div></div></div></div><div class="week-block"><div class="week-header">Sem 3 — 9 → 15 nov · Dernière longue (mer 11) puis taper 🔽</div><div class="day-row"><div class="day-name">Lun 9</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos</div></div></div><div class="day-row"><div class="day-name">Mar 10</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos (hockey supprimé)</div><div class="day-detail">Jambes fraîches pour la longue du lendemain</div></div></div><div class="day-row"><div class="day-name">Mer 11</div><div class="day-dot" style="background:var(--green)"></div><div class="day-content"><div class="day-title">✅ Dernière longue faite · 30 km / 1 050 m D+</div><div class="day-detail">FC moy 130 · 4h00 · 2e meilleur temps sur 30 km</div></div></div><div class="day-row"><div class="day-name">Jeu 12</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos (hockey annulé)</div><div class="day-detail">Récupération · hydratation · protéines + glucides</div></div></div><div class="day-row"><div class="day-name">Ven 13</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Ostéopathe · repos</div><div class="day-detail">Séance douce · prévenir de la course du 28</div></div></div><div class="day-row"><div class="day-name">Sam 14</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Footing non fait</div><div class="day-detail">Sans impact sur la prépa</div></div></div><div class="day-row"><div class="day-name">Dim 15</div><div class="day-dot" style="background:var(--green)"></div><div class="day-content"><div class="day-title">✅ Match Seynod (Coupe de France) fait</div><div class="day-detail">1h20 · effort modéré (RE 40) · effort habituel</div></div></div></div></details><div class="week-block"><div class="week-header">Sem 4 — 16 → 22 nov · Taper intensif 🔽🔽</div><div class="day-row"><div class="day-name">Lun 16</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos</div></div></div><div class="day-row"><div class="day-name">Mar 17</div><div class="day-dot" style="background:var(--purple)"></div><div class="day-content"><div class="day-title">🏒 Hockey (entraînement léger)</div><div class="day-detail">Pas de sprint ni de contact · pas de course ce jour · teste le risotto poulet-citron</div></div></div><div class="day-row"><div class="day-name">Mer 18</div><div class="day-dot" style="background:var(--trail)"></div><div class="day-content"><div class="day-title">Footing léger 30 min (facultatif)</div><div class="day-detail">FC &lt; 125 · 4 lignes droites de 20 s · teste les gnocchis</div></div></div><div class="day-row"><div class="day-name">Jeu 19</div><div class="day-dot" style="background:var(--purple)"></div><div class="day-content"><div class="day-title">🏒 Hockey (entraînement léger)</div><div class="day-detail">Dernière séance de hockey avant la course · fractionné supprimé</div></div></div><div class="day-row"><div class="day-name">Ven 20</div><div class="day-dot" style="background:var(--trail)"></div><div class="day-content"><div class="day-title">Répétition générale 12 km</div><div class="day-detail">FC &lt; 128 · tenue complète + gel caféiné + isotonique · config montre · lendemain match : reste facile</div></div></div><div class="day-row"><div class="day-name">Sam 21</div><div class="day-dot" style="background:var(--purple)"></div><div class="day-content"><div class="day-title">🏒 MATCH Valence (dom.) · 19h30</div><div class="day-detail">J-7 : jeu sans prise de risque</div></div></div><div class="day-row"><div class="day-name">Dim 22</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos</div></div></div></div><div class="week-block"><div class="week-header">Sem course — 23 → 28 nov 🏁</div><div class="day-row"><div class="day-name">Lun 23</div><div class="day-dot" style="background:#1e2740"></div><div class="day-content"><div class="day-title">Repos total</div></div></div><div class="day-row"><div class="day-name">Mar 24</div><div class="day-dot" style="background:var(--trail)"></div><div class="day-content"><div class="day-title">Footing léger</div><div class="day-detail">20 min · 3 accélérations · pas de hockey</div></div></div><div class="day-row"><div class="day-name">Mer 25</div><div class="day-dot" style="background:var(--gold)"></div><div class="day-content"><div class="day-title">Repos · carbo loading J-3</div><div class="day-detail">8-10 g glucides/kg · riz, pâtes, pain</div></div></div><div class="day-row"><div class="day-name">Jeu 26</div><div class="day-dot" style="background:var(--gold)"></div><div class="day-content"><div class="day-title">Repos · carbo loading J-2</div><div class="day-detail">Pâtes blanches, riz, compotes · pas de fibres</div></div></div><div class="day-row"><div class="day-name">Ven 27</div><div class="day-dot" style="background:var(--gold)"></div><div class="day-content"><div class="day-title">Repos · J-1 · retrait dossard 12h→19h</div><div class="day-detail">Dîner 19h pâtes + poulet · coucher tôt</div></div></div><div class="day-row"><div class="day-name">Sam 28</div><div class="day-dot" style="background:var(--gold)"></div><div class="day-content"><div class="day-title">🏁 SAINTELYON 23h30</div><div class="day-detail">Pasta party 18h30 · sieste l'après-midi · gel à 23h15</div></div></div></div>
+  </div>
+
+  </section>
+
+<!-- ═══════════════════════════════════ STRATÉGIE ═══════════════════════════════════ -->
+<section id="strategie" class="section">
+
+  <div class="card">
+    <div class="card-title">🎯 Objectifs & chrono cible</div>
+    <div class="stat-row"><div class="stat-label">Objectif A — Finisher</div><div class="stat-value" style="color:var(--trail)">Sous 16h30 (barrière finale)</div></div>
+    <div class="stat-row"><div class="stat-label">Objectif B — Ambitieux</div><div class="stat-value" style="color:var(--gold)">9h15 → 10h30</div></div>
+    <div class="stat-row"><div class="stat-label">Pronostic coach</div><div class="stat-value" style="color:var(--green)">10h30 → 11h15</div></div>
+    <div class="stat-row"><div class="stat-label">Allure cible</div><div class="stat-value">7'30 → 8'30"/km</div></div>
+    <div class="stat-row"><div class="stat-label">FC cible course</div><div class="stat-value" style="color:var(--green)">125-132 bpm</div></div>
+    <div class="stat-row"><div class="stat-label">Alarme Fenix</div><div class="stat-value" style="color:var(--red)">132 bpm max</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌙 Stratégie par phase (basée sur le GPX)</div>
+    <div class="strat-block "><div class="strat-phase">Phase 1 · Km 0-17 · Saint-Étienne → Saint-Christo · 23h30 → ~01h45</div><div class="strat-title">Foule et premier mur : tu ne gagnes rien ici</div><div class="strat-desc">20 000 coureurs, file indienne au début. 10 premiers km roulants (490-630 m), puis la 1re vraie montée km 11-14 (+270 m). FC max 130 bpm sur les 5 premiers km, marche dès 135 bpm. Premier gel à 0h45. Passage visé : <strong>2h10-2h15</strong>.</div></div><div class="strat-block gold"><div class="strat-phase">Phase 2 · Km 17-33 · Plateau 700-880 m → Sainte-Catherine · ~01h45 → ~03h45</div><div class="strat-title">L'enchaînement de bosses, le froid</div><div class="strat-desc">Bosses courtes (km 19-23), puis descente raide km 23-26 (−198 m) : freine, garde les quadris pour la suite. C'est la zone la plus haute et la plus froide : couche chaude dès Saint-Christo si besoin. Sainte-Catherine : 5 min max, passage visé <strong>~4h15</strong>.</div></div><div class="strat-block "><div class="strat-phase">Phase 3 · Km 33-42 · Montée au Signal · ~03h45 → ~05h15</div><div class="strat-title">Dernière vraie montée : marche active</div><div class="strat-desc">Rolling puis +160 m (km 33-38) et +174 m (km 39-42) jusqu'au <strong>Signal, 925 m au km 42</strong>, point culminant de la course. Près des deux tiers du D+ est derrière toi. Marche à fond dans les pentes. Mange un gel AVANT le sommet : la descente qui suit ne laisse pas le temps.</div></div><div class="strat-block red"><div class="strat-phase">Phase 4 · Km 42-60 · La grande descente · ~05h15 → ~07h35</div><div class="strat-title">C'est ici que ta course se joue</div><div class="strat-desc"><strong>8,9 km de descente continue (−513 m, −5,7 %)</strong> juste après le Signal, de nuit, puis encore −300 m jusqu'à Soucieu. Beaucoup finissent détruits ici. Foulées courtes, cadence 80+, FC sous 125 en descente, laisse-les passer. Le Camp (km 46) : soupe chaude, pain, banane, thé, barres, chocolat (pas de fromage ni de charcuterie). Le jour se lève vers Soucieu.</div></div><div class="strat-block green"><div class="strat-phase">Phase 5 · Km 60-80,6 · Plaine → Lyon · ~07h35 → ~10h15</div><div class="strat-title">Accélère petit à petit : finis plus vite que tu as commencé</div><div class="strat-desc">Section basse (170-320 m) quasi plate, 3 petits raidillons (km 65, 71, 75), derniers km en ville sur bitume. À partir de Chaponost (km 66), si les jambes répondent : accélère par paliers, FC libre. C'est ici que tu peux gagner 10-15 min sans prendre de risque.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🧭 Règles de décision en course</div>
+    <div class="stat-row"><div class="stat-label">FC &gt; 135 en montée</div><div class="stat-value" style="font-size:12px">Tu marches, sans discuter</div></div>
+    <div class="stat-row"><div class="stat-label">Retard sur le plan</div><div class="stat-value" style="font-size:12px">Ne rattrape jamais avant le km 66</div></div>
+    <div class="stat-row"><div class="stat-label">Nausée</div><div class="stat-value" style="font-size:12px">Stop gels 30 min → bouillon + Coca</div></div>
+    <div class="stat-row"><div class="stat-label">Froid / frissons</div><div class="stat-value" style="font-size:12px">2e couche immédiatement, pas au ravito suivant</div></div>
+    <div class="stat-row"><div class="stat-label">Jambes cuites après le Signal</div><div class="stat-value" style="font-size:12px">Marche les replats : tu as jusqu'à 16h30</div></div>
+    <div class="stat-row"><div class="stat-label">Chaponost, jambes OK</div><div class="stat-value" style="font-size:12px">Relance progressive, FC libre</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚠️ Règles absolues · Matériel OBLIGATOIRE</div>
+    <div class="alert alert-danger" style="margin-bottom:10px">🚫 ASSISTANCE PERSONNELLE INTERDITE aux ravitos : se faire ravitailler hors zones prévues = mise hors course</div><div class="alert alert-danger" style="margin-bottom:10px">🚫 BÂTONS INTERDITS (programme officiel) · chasuble dossard portée en dernière couche (puce chrono)</div>
+    <div class="alert alert-warning">🍃 Jeter un déchet à + de 100m d'un ravito = mise hors course</div>
+    <div style="margin-top:12px">
+      <div class="stat-row"><div class="stat-label">Sac de course</div><div class="stat-value" style="color:var(--red)">Obligatoire ✓</div></div>
+      <div class="stat-row"><div class="stat-label">Téléphone + LiveTrail</div><div class="stat-value" style="color:var(--red)">Obligatoire ✓</div></div>
+      <div class="stat-row"><div class="stat-label">Gobelet 15cl min</div><div class="stat-value" style="color:var(--red)">Obligatoire ✓</div></div>
+      <div class="stat-row"><div class="stat-label">1L eau au départ</div><div class="stat-value" style="color:var(--red)">Obligatoire ✓</div></div>
+      <div class="stat-row"><div class="stat-label">1 frontale + piles de rechange</div><div class="stat-value" style="color:var(--red)">Obligatoire ✓</div></div>
+      <div class="stat-row"><div class="stat-label">Couverture survie 1,4x2m</div><div class="stat-value" style="color:var(--red)">Obligatoire ✓</div></div>
+      <div class="stat-row"><div class="stat-label">Sifflet</div><div class="stat-value" style="color:var(--red)">Obligatoire ✓</div></div>
+      <div class="stat-row"><div class="stat-label">Bande élastique 100x6cm</div><div class="stat-value" style="color:var(--red)">Obligatoire ✓</div></div>
+      <div class="stat-row"><div class="stat-label">Veste imperméable à capuche</div><div class="stat-value" style="color:var(--red)">Obligatoire ✓</div></div>
+      <div class="stat-row"><div class="stat-label">Pièce d'identité</div><div class="stat-value" style="color:var(--red)">Obligatoire ✓</div></div>
+    </div>
+    <div class="alert alert-warning" style="margin-top:12px">⚠️ Kit grand froid possible selon météo : lunettes, bonnet chaud, gants imperméables, surpantalon, 2e couche chaude. Prépare-le à l'avance.</div>
+  </div>
+</section>
+
+<!-- ═══ INFOS ═══ -->
+<section id="infos" class="section">
+  <div class="card"><div class="card-title">📋 Source : programme coureurs 2026 officiel</div><div class="alert alert-info" style="font-size:12px">Tout est tiré du programme 2026 que tu m'as envoyé et du règlement. Le guide accompagnateurs (parkings, itinéraires) est un document séparé sur le site de la course.</div><div class="stat-row"><div class="stat-label">Numéro d'urgence</div><div class="stat-value" style="font-size:12px">09 72 45 60 02</div></div><div class="stat-row"><div class="stat-label">SaintéLyon solo</div><div class="stat-value" style="font-size:12px">80 km · 2 500 m D+ · temps max 17h30 · 8 000 coureurs</div></div></div>
+
+  <div class="card"><div class="card-title">📅 Le week-end</div><table class="table"><thead><tr><th>Quand</th><th>Quoi</th></tr></thead><tbody><tr><td><strong>Ven 27</strong> 12h-19h</td><td>Retrait des dossards (Halle Tony Garnier) avec carte retrait + pièce d'identité</td></tr><tr><td>Ven 27 12h-20h</td><td>Salon du Trail · 15h00 et 17h15 : présentation du guide nutritionnel TA Energy (scène)</td></tr><tr><td><strong>Sam 28</strong> 9h-17h</td><td>Retrait des dossards · Salon 9h-17h30</td></tr><tr><td>Sam 28 10h00</td><td>Présentation du guide nutritionnel TA Energy · 10h30 présentation des Éclaireurs · 11h45 conférence St-Yorre « Hydratation et trail »</td></tr><tr><td>Sam 28 16h-19h30</td><td>Navettes SaintéLyon solo, Avenue Leclerc (Novotel)</td></tr><tr><td>Sam 28 17h00</td><td>Consigne sacs ouverte à la Halle · 21h00 à Saint-Étienne</td></tr><tr><td>Sam 28 18h30-21h</td><td>Pasta party à Saint-Étienne</td></tr><tr><td>Sam 28 22h45</td><td>Ouverture des SAS · DJ set sur la ligne de départ jusqu'à 00h30</td></tr><tr><td><strong>Sam 28 23h30</strong></td><td>Départ vague 1 · V2 23h45 · V3 00h00 · V4 00h10 · V5 00h20 · V6 00h30</td></tr><tr><td>Dim 29 05h30</td><td>Première arrivée SaintéLyon à la Halle Tony Garnier</td></tr><tr><td>Dim 29 10h00</td><td>Remise des prix SaintéLyon solo et relais</td></tr><tr><td><strong>Dim 29 16h30</strong></td><td>Fermeture des parcours</td></tr></tbody></table></div>
+
+  <div class="card"><div class="card-title">🚌 Aller à Saint-Étienne</div><div class="stat-row"><div class="stat-label">Navette</div><div class="stat-value" style="font-size:12px">Avenue Leclerc, 69007 Lyon (Novotel) · 16h00 → 19h30 · 20 €</div></div><div class="stat-row"><div class="stat-label">Billet</div><div class="stat-value" style="font-size:12px">Ticket de contremarque obligatoire (en ligne ou à la Halle Tony Garnier)</div></div><div class="stat-row"><div class="stat-label">Conseil</div><div class="stat-value" style="font-size:12px">Ne prends pas le dernier car</div></div><div class="stat-row"><div class="stat-label">Retour</div><div class="stat-value" style="font-size:12px">Aucune navette de l'arrivée vers Saint-Étienne</div></div></div>
+
+  <div class="card"><div class="card-title">🎒 Consigne sacs</div><div class="stat-row"><div class="stat-label">Lyon</div><div class="stat-value" style="font-size:12px">À partir de 17h00 · parvis Nord de la Halle Tony Garnier (entrée visiteurs)</div></div><div class="stat-row"><div class="stat-label">Saint-Étienne</div><div class="stat-value" style="font-size:12px">À partir de 21h00 · parking intérieur du Parc des Expositions</div></div><div class="stat-row"><div class="stat-label">Étiquette</div><div class="stat-value" style="font-size:12px">Numérotée, fournie par l'organisation</div></div><div class="stat-row"><div class="stat-label">Récupération</div><div class="stat-value" style="font-size:12px">À Lyon, sous l'arche d'arrivée</div></div><div class="stat-row"><div class="stat-label">Limites</div><div class="stat-value" style="font-size:12px">40 L et 10 kg maximum</div></div></div>
+
+  <div class="card"><div class="card-title">✅ Matériel obligatoire</div><div class="check-item" style="cursor:default"><div class="check-text">Sac de course</div></div><div class="check-item" style="cursor:default"><div class="check-text">Téléphone avec appli <strong>LiveTrail installée et activée</strong> (batterie externe fortement recommandée)</div></div><div class="check-item" style="cursor:default"><div class="check-text">Gobelet personnel 15 cl minimum (plus aucun gobelet aux ravitos)</div></div><div class="check-item" style="cursor:default"><div class="check-text">Réserve d'eau minimum : 1 litre</div></div><div class="check-item" style="cursor:default"><div class="check-text">1 lampe frontale avec piles ou batteries de rechange</div></div><div class="check-item" style="cursor:default"><div class="check-text">Couverture de survie 1,40 m × 2 m minimum</div></div><div class="check-item" style="cursor:default"><div class="check-text">Sifflet</div></div><div class="check-item" style="cursor:default"><div class="check-text">Bande élastique auto-adhésive (100 cm × 6 cm minimum)</div></div><div class="check-item" style="cursor:default"><div class="check-text">Réserve alimentaire</div></div><div class="check-item" style="cursor:default"><div class="check-text">Veste imperméable</div></div><div class="check-item" style="cursor:default"><div class="check-text">Pièce d'identité (passeport ou carte)</div></div><div class="check-item" style="cursor:default"><div class="check-text"><strong>🚫 Bâtons interdits</strong></div></div><div class="check-item" style="cursor:default"><div class="check-text"><strong>Chasuble dossard en dernière couche</strong> : la puce de chronométrage doit être détectée</div></div></div>
+
+  <div class="card"><div class="card-title">⛺ Ce qui est servi aux ravitos (80 km)</div><table class="table"><thead><tr><th></th><th>St-Christo</th><th>Ste-Catherine</th><th>Le Camp</th><th>Soucieu</th><th>Chaponost</th><th>Lyon</th></tr></thead><tbody><tr><td>Bananes</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Clémentines</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Compotes</td><td></td><td>✓</td><td></td><td></td><td>✓</td><td></td></tr><tr><td>Pâtes de fruits</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Chocolat</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Barres de céréales</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr><tr><td>Quatre-quarts</td><td>✓</td><td>✓</td><td></td><td></td><td>✓</td><td>✓</td></tr><tr><td>Thé / café</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Emmental</td><td>✓</td><td>✓</td><td></td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Crackers</td><td>✓</td><td>✓</td><td></td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Cacahuètes</td><td></td><td>✓</td><td></td><td></td><td>✓</td><td>✓</td></tr><tr><td>Abricots secs</td><td></td><td></td><td></td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Soupe</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr><tr><td>Pain</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Jambon cuit</td><td>✓</td><td></td><td></td><td>✓</td><td>✓</td><td></td></tr><tr><td>Saucisson sec</td><td>✓</td><td>✓</td><td></td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>Filet de dinde</td><td>✓</td><td></td><td></td><td>✓</td><td>✓</td><td></td></tr><tr><td>Eau · St-Yorre · Coca</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr></tbody></table><div style="font-size:12px;color:var(--text-dim);margin-top:8px">Aucun gobelet fourni : le tien est obligatoire. Le Camp n'est pas un ravito liquide : soupe, pain, fruits, barres, thé, café.</div></div>
+
+  <div class="card"><div class="card-title">🕒 Barrières horaires et navettes abandon</div><table class="table"><thead><tr><th>Point</th><th>Barrière</th><th>Navettes abandon</th></tr></thead><tbody><tr><td>Saint-Christo · km 17</td><td>4h00</td><td>02h45 · 03h15 · 04h00 · 04h30</td></tr><tr><td>Sainte-Catherine · km 32</td><td>7h00</td><td>03h00 · 03h30 · 04h00 · 04h30 · 05h15 · 06h00 · 07h00 · 07h45</td></tr><tr><td>Le Camp · km 46</td><td>9h30</td><td>en continu de 02h00 à 10h00</td></tr><tr><td>Soucieu · km 60</td><td>12h00</td><td>02h30 · 03h30 · 04h30 · 05h30 · 06h30 · 07h30 · 08h30 · 10h00 · 12h10</td></tr><tr><td>Chaponost · km 67</td><td>13h30</td><td>en continu de 03h00 à 14h00</td></tr><tr><td>Lyon · arrivée</td><td>16h30</td><td>—</td></tr></tbody></table><div style="font-size:12px;color:var(--text-dim);margin-top:8px">Barrières calculées sur le dernier départ (00h30), allure de référence 5,2 km/h. Hors de ces navettes, la prise en charge n'est pas assurée sauf cas médicalisé.</div></div>
+
+  <div class="card"><div class="card-title">💡 Éclaireurs (meneurs d'allure)</div><table class="table"><thead><tr><th>Vague (départ)</th><th>Éclaireurs (objectif)</th></tr></thead><tbody><tr><td>Vague 1 · 23h30</td><td>9h</td></tr><tr><td>Vague 2 · 23h45</td><td>9h30</td></tr><tr><td>Vague 3 · 00h00</td><td>10h · 10h30 · 11h</td></tr><tr><td>Vague 4 · 00h10</td><td>11h30 · 12h · 12h30</td></tr><tr><td>Vague 5 · 00h20</td><td>13h · 13h30 · 14h</td></tr><tr><td>Vague 6 · 00h30</td><td>pas d'Éclaireurs</td></tr></tbody></table><div style="font-size:12px;color:var(--text-dim);margin-top:8px">11 trinômes en chasuble rose, objectifs 9h à 14h30, respect du temps à ±10 min, arrêts limités aux ravitos. Ton objectif de 10h45 correspond au groupe « entre 10h30 et 11h » (vague 3). Rencontre sur le stand Petzl du Salon ou dans le Hall A du Parc des Expositions avant le départ.</div></div>
+
+  <div class="card"><div class="card-title">🎉 Sur le parcours</div><div class="stat-row"><div class="stat-label">Saint-Christo</div><div class="stat-value" style="font-size:12px">Fan Zone Cavale & Frontale (BV Sport) à deux pas du ravito : bouillons chauds, DJ, ambiance, accès libre</div></div><div class="stat-row"><div class="stat-label">Soucieu</div><div class="stat-value" style="font-size:12px">Zone de confort ASICS × i-Run juste avant le ravito, de minuit à midi</div></div><div class="stat-row"><div class="stat-label">Dernier km</div><div class="stat-value" style="font-size:12px">Animations et lumières de La Région</div></div><div class="stat-row"><div class="stat-label">Direct TV</div><div class="stat-value" style="font-size:12px">Sam 22h30-00h00 : RMC Running (YouTube), Twitch RMC Sport, BFM Lyon</div></div></div>
+
+  <div class="card"><div class="card-title">👥 Tes proches</div><div class="stat-row"><div class="stat-label">Guide accompagnateurs</div><div class="stat-value" style="font-size:12px">Sur le site de la course : itinéraires, parkings, fermetures de routes</div></div><div class="stat-row"><div class="stat-label">À respecter</div><div class="stat-value" style="font-size:12px">Interdit de se garer sur des propriétés privées (entrées, bords de route, champs) : le coureur suivi peut être mis hors course</div></div><div class="stat-row"><div class="stat-label">Sainte-Catherine</div><div class="stat-value" style="font-size:12px">Village inaccessible en voiture</div></div><div class="stat-row"><div class="stat-label">Assistance</div><div class="stat-value" style="font-size:12px">Interdite aux ravitos (règlement)</div></div><div class="stat-row"><div class="stat-label">Halle Tony Garnier</div><div class="stat-value" style="font-size:12px"><div class="stat-row"><div class="stat-label">Métro B</div><div class="stat-value" style="font-size:12px">Arrêt Debourg puis 10 min à pied</div></div><div class="stat-row"><div class="stat-label">Tramway T1</div><div class="stat-value" style="font-size:12px">Arrêt Halle Tony Garnier</div></div><div class="stat-row"><div class="stat-label">Bus</div><div class="stat-value" style="font-size:12px">36 (Place Docteur Mérieux) · depuis Perrache 34 et 60</div></div><div class="stat-row"><div class="stat-label">Voiture</div><div class="stat-value" style="font-size:12px">A6 : sortie Gerland · A7 : La Mulatière puis Gerland · A43 : périph sud, sortie Lyon-Centre porte de Gerland</div></div><div class="stat-row"><div class="stat-label">Vélo'v</div><div class="stat-value" style="font-size:12px">Station 7013 Halle Tony Garnier</div></div></div></div></div>
+
+  <div class="card"><div class="card-title">🏁 Après la course</div><div class="stat-row"><div class="stat-label">À l'arrivée</div><div class="stat-value" style="font-size:12px">Médaille, photo et vidéo souvenir offertes, ravito d'arrivée, vestiaire et douche, bière finisher</div></div><div class="stat-row"><div class="stat-label">Repas chaud assis</div><div class="stat-value" style="font-size:12px">Salade ou soupe, charcuterie, pâtes sauce tomate ou pesto, fromage, clémentine, dessert</div></div><div class="stat-row"><div class="stat-label">Soins</div><div class="stat-value" style="font-size:12px">Ostéopathes, podologues, kinés</div></div><div class="stat-row"><div class="stat-label">Ton sac</div><div class="stat-value" style="font-size:12px">À récupérer sous l'arche</div></div></div>
+
+  </section>
+
+<!-- ═══ PARCOURS ═══ -->
+<section id="parcours" class="section">
+  <div class="card">
+    <div class="card-title">🗺️ Parcours officiel · GPX <span class="badge badge-blue">80,6 km</span></div>
+    <div id="profile-parcours"></div>
+    <div style="font-size:11px;color:var(--text-dim);line-height:1.7;margin-top:8px">① Saint-Christo km 17 · ② Sainte-Catherine km 33 · <span style="color:var(--red)">★ Le Signal km 42 (925 m)</span> · ③ Le Camp km 46 · ④ Soucieu km 60 · ⑤ Chaponost km 66</div>
+    <div style="display:flex;gap:14px;font-size:12px;flex-wrap:wrap;margin-top:10px;color:var(--text-dim)">
+      <span>⛰️ ~2 500 m D+</span><span>📉 ~2 600 m D−</span><span>🔝 925 m (km 42)</span><span>🚩 départ 494 m · arrivée 174 m</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Par section</div>
+    <table class="table"><thead><tr><th>Section</th><th>Km</th><th>D+</th><th>D−</th></tr></thead><tbody><tr><td>Saint-Étienne → Saint-Christo</td><td>17.3</td><td style="color:var(--red)">+539</td><td style="color:var(--green)">−262</td></tr><tr><td>→ Sainte-Catherine</td><td>15.3</td><td style="color:var(--red)">+442</td><td style="color:var(--green)">−520</td></tr><tr><td>→ Le Signal ★</td><td>9.6</td><td style="color:var(--red)">+413</td><td style="color:var(--green)">−186</td></tr><tr><td>→ Soucieu (grande descente)</td><td>17.9</td><td style="color:var(--red)">+281</td><td style="color:var(--green)">−835</td></tr><tr><td>→ Chaponost</td><td>6.2</td><td style="color:var(--red)">+72</td><td style="color:var(--green)">−129</td></tr><tr><td>→ Lyon</td><td>14.3</td><td style="color:var(--red)">+196</td><td style="color:var(--green)">−339</td></tr></tbody></table>
+    <div class="alert alert-info" style="margin-top:10px;font-size:12px">La 1re moitié concentre la montée (D+ 1 420 sur les 40 premiers km) ; la 2e est surtout descendante (D− 1 460 pour D+ 840). Course de quadris plus que de cardio.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⛰️ Montées et descentes clés (≥ 95 m)</div>
+    <table class="table"><thead><tr><th>Km</th><th>Dén.</th><th>Pente</th><th>À retenir</th></tr></thead><tbody><tr><td>9→19</td><td><strong>+359</strong></td><td style="color:var(--text-dim)">10 km · 3,6 %</td><td style="font-size:12px">1re vraie montée (le gros de la pente : km 11-14)</td></tr><tr><td>20→23</td><td><strong>+165</strong></td><td style="color:var(--text-dim)">3 km · 5,6 %</td><td style="font-size:12px">Plateau, bosse courte</td></tr><tr><td>23→26</td><td><strong>−198</strong></td><td style="color:var(--text-dim)">3 km · −6,5 %</td><td style="font-size:12px">Descente raide : freine</td></tr><tr><td>33→38</td><td><strong>+160</strong></td><td style="color:var(--text-dim)">4,4 km · 3,6 %</td><td style="font-size:12px">Rolling avant le Signal</td></tr><tr><td>39→42</td><td><strong>+174</strong></td><td style="color:var(--text-dim)">3 km · 5,8 %</td><td style="font-size:12px">Montée finale vers le Signal (925 m)</td></tr><tr><td>42→51</td><td><strong>−513</strong></td><td style="color:var(--text-dim)">8,9 km · −5,7 %</td><td style="font-size:12px">⚠️ GRANDE DESCENTE : les quadris</td></tr><tr><td>51→52</td><td><strong>+126</strong></td><td style="color:var(--text-dim)">1,4 km · 9 %</td><td style="font-size:12px">Raidillon après la descente</td></tr><tr><td>52→64</td><td><strong>−302</strong></td><td style="color:var(--text-dim)">11,6 km · −2,6 %</td><td style="font-size:12px">Descente douce vers Soucieu / Chaponost</td></tr><tr><td>75</td><td><strong>+95</strong></td><td style="color:var(--text-dim)">0,9 km · 11 %</td><td style="font-size:12px">Dernier raidillon avant Lyon</td></tr></tbody></table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⏱️ Plan de passage</div>
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <button class="scen-btn" data-k="ambitieux" onclick="showScen('ambitieux',this)">Ambitieux<br>10h00</button>
+      <button class="scen-btn" data-k="cible" onclick="showScen('cible',this)">Cible<br>10h45</button>
+      <button class="scen-btn" data-k="prudent" onclick="showScen('prudent',this)">Prudent<br>11h30</button>
+    </div>
+    <div id="scen-table"></div>
+  </div>
+
+  </section>
+
+<!-- ═══════════════════════════════════ RAVITOS ═══════════════════════════════════ -->
+<section id="ravitos" class="section">
+
+  <div class="alert alert-info">🚫 Règlement 2026 : l'assistance personnelle aux ravitos est strictement interdite (hors élites). Tes proches peuvent t'encourager dans les zones spectateurs, mais ne peuvent rien te donner. Tout ce dont tu as besoin est dans ton sac ou au ravito officiel.</div>
+
+  <div class="card"><div class="card-title">🚫 Assistance : ce que dit le règlement 2026</div><div class="stat-row"><div class="stat-label">Aux ravitaillements</div><div class="stat-value" style="font-size:12px">Assistance strictement interdite</div></div><div class="stat-row"><div class="stat-label">Hors zones prévues</div><div class="stat-value" style="font-size:12px">Se faire ravitailler = <strong>mise hors course</strong></div></div><div class="stat-row"><div class="stat-label">Être accompagné</div><div class="stat-value" style="font-size:12px">Interdit le long du parcours par une personne non inscrite, hors zones spectateurs</div></div><div class="stat-row"><div class="stat-label">Élites uniquement</div><div class="stat-value" style="font-size:12px">Assistance tolérée à Sainte-Catherine et Soucieu, 1 personne, dans la zone réservée</div></div><div class="stat-row"><div class="stat-label">Déchets</div><div class="stat-value" style="font-size:12px">Plus de 100 m après un ravito = mise hors course</div></div><div class="alert alert-info" style="margin-top:10px;font-size:12px">Tes proches viennent pour t'encourager et te suivre en direct (LiveTrail). Les zones spectateurs, parkings et itinéraires sont dans le livret accompagnateurs de l'organisation.</div></div>
+
+  <div class="card"><div class="card-title">🧳 Ce que tu emportes sur toi (autonomie entre ravitos)</div><div class="stat-row"><div class="stat-label">Eau</div><div class="stat-value" style="font-size:12px">2 flasks (1 L minimum au départ), à remplir à chaque ravito</div></div><div class="stat-row"><div class="stat-label">Énergie</div><div class="stat-value" style="font-size:12px">Gels TA, gommes TA, barre de secours (réserve alimentaire obligatoire)</div></div><div class="stat-row"><div class="stat-label">Froid</div><div class="stat-value" style="font-size:12px">2e couche chaude, bonnet, gants imperméables</div></div><div class="stat-row"><div class="stat-label">Matériel</div><div class="stat-value" style="font-size:12px">1 lampe frontale + piles ou batterie de rechange, couverture de survie, sifflet</div></div><div class="stat-row"><div class="stat-label">Hygiène</div><div class="stat-value" style="font-size:12px">Vaseline, pansements</div></div></div>
+
+  <div class="card">
+    <div class="card-title">⏱️ Suivi course en direct
+      <span class="save-indicator" id="tracker-saved">✓ Sauvegardé</span>
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="ravito-field-label">Ton heure de départ réelle</div>
+      <div class="time-input-row">
+        <input type="time" class="time-input" id="depart-time" value="23:30" oninput="updatePredictions()">
+        <button class="btn btn-primary btn-sm" onclick="resetTracker()">Reset</button>
+      </div>
+    </div>
+    <div id="tracker-points">
+      <!-- Généré par JS -->
+    </div>
+    <div id="predicted-arrival" style="display:none;margin-top:12px;padding:12px;background:rgba(16,185,129,0.1);border-radius:8px;border:1px solid rgba(16,185,129,0.3)">
+      <div style="font-size:12px;color:var(--text-dim)">Arrivée prévue à Lyon</div>
+      <div id="arrival-time" style="font-size:20px;font-weight:700;color:var(--green);font-family:'Space Grotesk',sans-serif"></div>
+      <div id="arrival-total" style="font-size:12px;color:var(--text-dim);margin-top:2px"></div>
+    </div>
+  </div>
+
+  <!-- Ravito 1 : Saint-Christo -->
+  <div class="ravito-card">
+    <div class="ravito-header">
+      <div>
+        <div class="ravito-name">⛺ Saint-Christo-en-Jarez</div>
+        <div class="ravito-info">Km 17,3 · Ravito solide · ~01h45 (cible 10h45)</div>
+      </div>
+      <div style="text-align:right">
+        <div class="ravito-barrier">4h00</div>
+        <div class="ravito-barrier-label">Barrière horaire</div>
+      </div>
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">👤 Spectateurs (encouragements, zone spectateurs)</div>
+      <input type="text" class="ravito-input" id="r1-persons" placeholder="Qui t'encourage ici (facultatif)" oninput="saveRavitos()">
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">🎒 Ce que je fais au ravito officiel — clique</div>
+      <div class="ravito-items">
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r1')">Remplir les 2 flasks</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r1')">Prendre un gel ou des gommes</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r1')">Remettre une couche (sac)</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r1')">Boisson chaude</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r1')">Vérifier lampe et piles</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r1')">Solide (banane, pain)</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r1')">Coca</span>
+      </div>
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">📝 Notes supplémentaires</div>
+      <input type="text" class="ravito-input" id="r1-notes" placeholder="Ex: Me rappeler de prendre les gants" oninput="saveRavitos()">
+    </div>
+    <div class="alert alert-info" style="margin-top:8px;font-size:12px">☕ Bouillon chaud disponible · 🍌 Banane · 🥖 Solides · Max 3 min d'arrêt</div>
+  </div>
+
+  <!-- Ravito 2 : Sainte-Catherine -->
+  <div class="ravito-card" style="border-color:rgba(245,158,11,0.4)">
+    <div class="ravito-header">
+      <div>
+        <div class="ravito-name">⭐ Sainte-Catherine</div>
+        <div class="ravito-info">Km 32,7 · Ravito solide · ~03h45 · RAVITO CLEF</div>
+      </div>
+      <div style="text-align:right">
+        <div class="ravito-barrier">7h00</div>
+        <div class="ravito-barrier-label">Barrière horaire</div>
+      </div>
+    </div>
+    <div class="alert alert-warning" style="margin-bottom:10px;font-size:12px">⚠️ Voitures INTERDITES à Sainte-Catherine · Assistance personnelle réservée aux élites</div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">👤 Spectateurs (encouragements, zone spectateurs)</div>
+      <input type="text" class="ravito-input" id="r2-persons" placeholder="Assistance perso interdite — ravito officiel seulement" oninput="saveRavitos()" disabled style="opacity:0.5">
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">📋 Ce que tu dois faire ici</div>
+      <div class="ravito-items">
+        <span class="ravito-item-tag selected">1 verre Coca</span>
+        <span class="ravito-item-tag selected">Bouillon chaud</span>
+        <span class="ravito-item-tag selected">Pain + fromage</span>
+        <span class="ravito-item-tag selected">Remplis flasks</span>
+        <span class="ravito-item-tag selected">2e isotonique</span>
+      </div>
+    </div>
+    <div class="alert alert-danger" style="margin-top:8px;font-size:12px">🚨 Max 5 min d'arrêt · Barrière à 7h00 · Sauvegarde ton énergie pour la 2e moitié</div>
+  </div>
+
+  <!-- Ravito 3 : Le Camp -->
+  <div class="ravito-card">
+    <div class="ravito-header">
+      <div>
+        <div class="ravito-name">⛺ Le Camp — Saint-Genou</div>
+        <div class="ravito-info">Km 46 · Ravito solide (soupe, pain, fruits) · ~05h40</div>
+      </div>
+      <div style="text-align:right">
+        <div class="ravito-barrier">9h30</div>
+        <div class="ravito-barrier-label">Barrière horaire</div>
+      </div>
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">👤 Spectateurs (encouragements, zone spectateurs)</div>
+      <input type="text" class="ravito-input" id="r3-persons" placeholder="Ex: Sarah" oninput="saveRavitos()">
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">🎒 Ce que je fais au ravito officiel</div>
+      <div class="ravito-items">
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r3')">Gel caféiné (de mon sac)</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r3')">Remplir les flasks</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r3')">Solide de mon sac</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r3')">Remettre une couche (sac)</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r3')">Pastille dans la flask</span>
+      </div>
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">📝 Notes</div>
+      <input type="text" class="ravito-input" id="r3-notes" placeholder="Notes..." oninput="saveRavitos()">
+    </div>
+    <div class="alert alert-warning" style="margin-top:8px;font-size:12px">✅ Ravito solide et chaud : soupe, pain, banane, clémentines, thé, café, barres, chocolat, pâtes de fruits, Coca. Pas de fromage ni de charcuterie.</div>
+  </div>
+
+  <!-- Ravito 4 : Soucieu -->
+  <div class="ravito-card">
+    <div class="ravito-header">
+      <div>
+        <div class="ravito-name">⛺ Soucieu-en-Jarrest</div>
+        <div class="ravito-info">Km 60,2 · Ravito solide · ~07h35</div>
+      </div>
+      <div style="text-align:right">
+        <div class="ravito-barrier">12h00</div>
+        <div class="ravito-barrier-label">Barrière horaire</div>
+      </div>
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">👤 Spectateurs (encouragements, zone spectateurs)</div>
+      <input type="text" class="ravito-input" id="r4-persons" placeholder="Ex: Sarah + famille" oninput="saveRavitos()">
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">🎒 Ce que je fais au ravito officiel</div>
+      <div class="ravito-items">
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r4')">Gel caféiné (de mon sac)</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r4')">Coca</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r4')">Remplir les flasks</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r4')">Solide (banane, pain)</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r4')">Encouragements (zone spectateurs)</span>
+      </div>
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">📝 Notes</div>
+      <input type="text" class="ravito-input" id="r4-notes" placeholder="Notes..." oninput="saveRavitos()">
+    </div>
+    <div class="alert alert-success" style="margin-top:8px;font-size:12px">✅ 🥤 Coca · ☕ Bouillon · Max 3 min · Il ne reste que 20km !</div>
+  </div>
+
+  <!-- Ravito 5 : Chaponost -->
+  <div class="ravito-card">
+    <div class="ravito-header">
+      <div>
+        <div class="ravito-name">⛺ Chaponost</div>
+        <div class="ravito-info">Km 67 · Ravito solide · ~08h20</div>
+      </div>
+      <div style="text-align:right">
+        <div class="ravito-barrier">13h30</div>
+        <div class="ravito-barrier-label">Barrière horaire</div>
+      </div>
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">👤 Spectateurs (encouragements, zone spectateurs)</div>
+      <input type="text" class="ravito-input" id="r5-persons" placeholder="Ex: Sarah + famille" oninput="saveRavitos()">
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">🎒 Ce que je fais au ravito officiel</div>
+      <div class="ravito-items">
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r5')">Gel caféiné (de mon sac)</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r5')">Remplir les flasks</span>
+        <span class="ravito-item-tag" onclick="toggleTag(this,'r5')">Encouragements</span>
+      </div>
+    </div>
+    <div class="ravito-field">
+      <div class="ravito-field-label">📝 Notes</div>
+      <input type="text" class="ravito-input" id="r5-notes" placeholder="Notes..." oninput="saveRavitos()">
+    </div>
+    <div class="alert alert-success" style="margin-top:8px;font-size:12px">🏁 Max 2 min · 14 km jusqu'à Lyon · TOUT DONNER !</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📱 Suivi LiveTrail</div>
+    <div class="stat-row"><div class="stat-label">Application</div><div class="stat-value">LiveTrail</div></div>
+    <div class="stat-row"><div class="stat-label">Dossard</div><div class="stat-value"><input type="text" id="dossard" style="background:var(--night-3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text);font-size:13px;width:100px;outline:none" placeholder="N° dossard" oninput="saveRavitos()"></div></div>
+    <div class="stat-row"><div class="stat-label">Contact urgence</div><div class="stat-value"><input type="text" id="emergency" style="background:var(--night-3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text);font-size:13px;width:140px;outline:none" placeholder="Nom + tél" oninput="saveRavitos()"></div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ NUTRITION ═══════════════════════════════════ -->
+<section id="nutrition" class="section">
+  <div class="card">
+    <div class="card-title">🎒 Produits à emporter</div>
+    <table class="table">
+      <thead><tr><th>Produit</th><th>Qté</th><th>Usage</th></tr></thead>
+      <tbody>
+        <tr><td>Gels TA Jelly</td><td><strong>8</strong></td><td>Km 8→74</td></tr>
+        <tr><td>Gel caféiné (de mon sac) ☕</td><td><strong>3</strong></td><td>Km 53→74</td></tr>
+        <tr><td>Gel secours</td><td><strong>1</strong></td><td>Urgence</td></tr>
+        <tr><td>Sachets isotonique TA</td><td><strong>2</strong></td><td>Flask ph1+ph2</td></tr>
+        <tr><td>Pastilles électrolytes</td><td><strong>6</strong></td><td>Flask ph2+ph3</td></tr>
+        <tr><td>Gommes TA</td><td><strong>6 sachets</strong></td><td>Entre les gels</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Plan km par km <span class="badge badge-gold">scénario 10h45</span></div>
+    <div class="phase-header"><div class="phase-name">Phase 1 — Km 0-17</div><div class="phase-meta">23h30 → 01h45 · ~55 g/h</div></div><div class="nutrition-row"><div class="nutrition-km">Avant le départ</div><div class="nutrition-time">23h00</div><div class="nutrition-icon">🟦</div><div class="nutrition-action">Flask 2 → sachet isotonique TA · 1 gel à 23h15</div></div><div class="nutrition-row"><div class="nutrition-km">Km 6</div><div class="nutrition-time">00h15</div><div class="nutrition-icon">🟡</div><div class="nutrition-action">Gel 1 + eau</div></div><div class="nutrition-row"><div class="nutrition-km">Km 12</div><div class="nutrition-time">01h00</div><div class="nutrition-icon">🟡</div><div class="nutrition-action">Gel 2 + eau</div></div><div class="nutrition-row"><div class="nutrition-km">Km 14</div><div class="nutrition-time">01h22</div><div class="nutrition-icon">🟠</div><div class="nutrition-action">3 gommes TA</div></div><div class="phase-header"><div class="phase-name">Phase 2 — Km 17-33</div><div class="phase-meta">01h45 → 03h45 · ~50 g/h</div></div><div class="nutrition-row"><div class="nutrition-km">Km 17</div><div class="nutrition-time">01h43</div><div class="nutrition-icon">⛺</div><div class="nutrition-action"><strong>Saint-Christo-en-Jarez</strong> · Bouillon + banane · flask 2 → pastille électrolyte · max 3 min</div></div><div class="nutrition-row"><div class="nutrition-km">Km 22</div><div class="nutrition-time">02h30</div><div class="nutrition-icon">🟡</div><div class="nutrition-action">Gel 3 + eau</div></div><div class="nutrition-row"><div class="nutrition-km">Km 25</div><div class="nutrition-time">02h52</div><div class="nutrition-icon">🟠</div><div class="nutrition-action">3 gommes TA</div></div><div class="nutrition-row"><div class="nutrition-km">Km 28</div><div class="nutrition-time">03h15</div><div class="nutrition-icon">🟡</div><div class="nutrition-action">Gel 4 + eau</div></div><div class="phase-header"><div class="phase-name">Phase 3 — Km 33-42</div><div class="phase-meta">03h45 → 05h15 · ~50 g/h</div></div><div class="nutrition-row"><div class="nutrition-km">Km 33</div><div class="nutrition-time">03h47</div><div class="nutrition-icon">⛺</div><div class="nutrition-action"><strong>Sainte-Catherine</strong> · <strong>Coca + bouillon + pain/fromage</strong> · flask 2 → 2e isotonique · max 5 min</div></div><div class="nutrition-row"><div class="nutrition-km">Km 36</div><div class="nutrition-time">04h22</div><div class="nutrition-icon">🟠</div><div class="nutrition-action">3 gommes TA</div></div><div class="nutrition-row"><div class="nutrition-km">Km 39</div><div class="nutrition-time">04h45</div><div class="nutrition-icon">🟡</div><div class="nutrition-action">Gel 5 + eau</div></div><div class="phase-header"><div class="phase-name">Phase 4 — Km 42-60</div><div class="phase-meta">05h15 → 07h35 · ~50 g/h</div></div><div class="nutrition-row"><div class="nutrition-km">Km 42</div><div class="nutrition-time">05h17</div><div class="nutrition-icon">⭐</div><div class="nutrition-action"><strong>Sommet du Signal (925 m)</strong> · gel/gommes AVANT de plonger dans la descente</div></div><div class="nutrition-row"><div class="nutrition-km">Km 46</div><div class="nutrition-time">05h41</div><div class="nutrition-icon">⛺</div><div class="nutrition-action"><strong>Le Camp</strong> · soupe chaude + pain + banane + thé · remplir les flasks · max 4 min</div></div><div class="nutrition-row"><div class="nutrition-km">Km 50</div><div class="nutrition-time">06h15</div><div class="nutrition-icon">☕</div><div class="nutrition-action">Gel 6 caféiné + eau</div></div><div class="nutrition-row"><div class="nutrition-km">Km 55</div><div class="nutrition-time">07h00</div><div class="nutrition-icon">☕</div><div class="nutrition-action">Gel 7 caféiné + eau</div></div><div class="phase-header"><div class="phase-name">Phase 5 — Km 60-80,6</div><div class="phase-meta">07h35 → 10h15 · ~48 g/h</div></div><div class="nutrition-row"><div class="nutrition-km">Km 60</div><div class="nutrition-time">07h33</div><div class="nutrition-icon">⛺</div><div class="nutrition-action"><strong>Soucieu-en-Jarrest</strong> · Coca + bouillon · flask → pastille électrolyte · max 3 min</div></div><div class="nutrition-row"><div class="nutrition-km">Km 66</div><div class="nutrition-time">08h22</div><div class="nutrition-icon">⛺</div><div class="nutrition-action"><strong>Chaponost</strong> · Coca · flask eau · dernier ravito · max 2 min</div></div><div class="nutrition-row"><div class="nutrition-km">Km 70</div><div class="nutrition-time">08h52</div><div class="nutrition-icon">🟠</div><div class="nutrition-action">3 gommes TA</div></div><div class="nutrition-row"><div class="nutrition-km">Km 73</div><div class="nutrition-time">09h15</div><div class="nutrition-icon">☕</div><div class="nutrition-action">Gel 8 caféiné + eau</div></div><div class="nutrition-row"><div class="nutrition-km">Km 80,6</div><div class="nutrition-time">10h15</div><div class="nutrition-icon">🏁</div><div class="nutrition-action"><strong>ARRIVÉE LYON — Halle Tony Garnier</strong> 🎉</div></div>
+    <div class="alert alert-info" style="margin-top:12px;font-size:12px">Prévu : 9 gels (dont 3 caféinés) + 4 prises de gommes. Tu emportes 12 gels : 3 de marge. Les horaires suivent ton temps de passage : si tu es en avance ou en retard, garde le rythme « 1 prise toutes les 45 min ».</div>
+  </div>
+
+  <div class="card"><div class="card-title">🍌 Contre la lassitude des gels</div><div class="alert alert-info" style="font-size:12px">Après 5-6 h, le sucré écœure presque tout le monde. Passe à un mélange sucré, salé et chaud : les gels couvrent environ la moitié de tes glucides, le reste vient d'aliments variés.</div><table class="table"><thead><tr><th>Aliment</th><th>≈ glucides</th></tr></thead><tbody><tr><td>1 banane</td><td>25 g</td></tr><tr><td>1 sandwich pain blanc + jambon (60 g de pain)</td><td>30 g</td></tr><tr><td>2 tranches de pain d'épices</td><td>36 g</td></tr><tr><td>1 compote en gourde</td><td>15 g</td></tr><tr><td>Coca 20 cl (dégazé)</td><td>20 g</td></tr><tr><td>2 Petit-Beurre</td><td>16 g</td></tr><tr><td>100 g de pommes de terre vapeur salées</td><td>17 g</td></tr><tr><td>1 gel TA</td><td>33 g</td></tr><tr><td>Bouillon / soupe</td><td>~3 g (sodium utile)</td></tr></tbody></table><div style="font-size:12px;color:var(--text-dim);margin-top:8px">Règle : 1 prise toutes les 40-45 min, en alternant. De nuit (km 17-46) : plutôt salé et chaud. À l'aube (km 46-66) : sucré, compote, banane, café. À tester sur ta sortie du 20 novembre : sandwich + compote + 1 gel.</div></div>
+
+  <div class="card">
+    <div class="card-title">📊 Glucides par phase</div>
+    <div class="fc-row"><div class="fc-label">Km 0-17</div><div class="fc-bar"><div class="fc-fill" style="width:85%;background:var(--trail)"></div></div><div class="fc-value" style="color:var(--trail)">~55g/h</div></div>
+    <div class="fc-row"><div class="fc-label">Km 17-42</div><div class="fc-bar"><div class="fc-fill" style="width:75%;background:var(--gold)"></div></div><div class="fc-value" style="color:var(--gold)">~50g/h</div></div>
+    <div class="fc-row"><div class="fc-label">Km 42-67</div><div class="fc-bar"><div class="fc-fill" style="width:85%;background:var(--green)"></div></div><div class="fc-value" style="color:var(--green)">~55g/h</div></div>
+    <div class="fc-row"><div class="fc-label">Km 67-80</div><div class="fc-bar"><div class="fc-fill" style="width:70%;background:var(--red)"></div></div><div class="fc-value" style="color:var(--red)">~48g/h</div></div>
+  </div>
+</section>
+
+<!-- ═══ REPAS ═══ -->
+<section id="repas" class="section">
+  <div class="card"><div class="card-title">🍽️ Objectifs glucides · 70 kg</div><table class="table"><thead><tr><th>Jour</th><th>Objectif</th><th>Glucides (70 kg)</th></tr></thead><tbody><tr><td>Mer 25 · J-3</td><td>7-8 g/kg</td><td>~500-550 g</td></tr><tr><td>Jeu 26 · J-2</td><td>9-10 g/kg</td><td>~630-700 g</td></tr><tr><td>Ven 27 · J-1</td><td>~8 g/kg</td><td>~560 g</td></tr><tr><td>Sam 28 · jour J</td><td>4-5 g/kg</td><td>~300-350 g</td></tr></tbody></table><div style="font-size:12px;color:var(--text-dim);margin-top:8px">Les quantités sont approximatives (±10 %). Mange en 5-6 prises par jour plutôt qu'en 3 gros repas, et reste sur peu de fibres et peu de gras.</div></div>
+
+  <div class="card"><div class="card-title">🥗 Menus · 13 → 15 nov (cette semaine)</div><table class="table"><tbody><tr><td colspan="2" style="background:var(--night-3);font-weight:600;color:var(--trail)">Ven 13 · ostéo, repos · ~350 g</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Petit déj</td><td>Tartines beurre-confiture + yaourt + fruit</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Midi</td><td>Omelette 3 œufs + jambon, pommes de terre vapeur, haricots verts</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Collation</td><td>Compote + pain d'épices</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Dîner</td><td>Cabillaud au citron + riz basmati + carottes cuites</td></tr><tr><td colspan="2" style="background:var(--night-3);font-weight:600;color:var(--trail)">Sam 14 · footing 30 min · ~400 g</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Petit déj</td><td>Pain + beurre + confiture + banane + café</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Midi</td><td>Spaghettis bolognaise de dinde + un peu de parmesan</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Collation</td><td>Yaourt + miel + banane</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Dîner</td><td>Poulet rôti + purée de pommes de terre + courgettes sautées</td></tr><tr><td colspan="2" style="background:var(--night-3);font-weight:600;color:var(--trail)">Dim 15 · match Seynod · ~450 g</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Petit déj</td><td>Pain + confiture + banane + yaourt</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Midi (≥ 3 h avant)</td><td>Riz + poulet + compote</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">1 h avant</td><td>Banane ou compote en gourde</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Pendant</td><td>Eau + 1 pastille d'électrolytes</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Après</td><td>Pâtes + poulet ou œufs + légumes cuits + yaourt</td></tr></tbody></table></div>
+
+  <div class="card"><div class="card-title">🥗 Menus · 16 → 22 nov (taper)</div><table class="table"><tbody><tr><td colspan="2" style="background:var(--night-3);font-weight:600;color:var(--trail)">Lun 16 · repos · ~350 g</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Petit déj</td><td>Tartines + œuf à la coque + fruit</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Midi</td><td>Salade de riz : riz, thon, maïs, tomate</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Collation</td><td>Yaourt + miel</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Dîner</td><td>Boulettes de dinde sauce tomate + spaghettis</td></tr><tr><td colspan="2" style="background:var(--night-3);font-weight:600;color:var(--trail)">Mar 17 · hockey · ~400 g</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Petit déj</td><td>Pain + miel + banane + yaourt</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Midi</td><td><strong>Risotto poulet-citron</strong> (test avant la course)</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Collation</td><td>Compote + Petit-Beurre</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Dîner</td><td>Poisson blanc + purée + haricots verts</td></tr><tr><td colspan="2" style="background:var(--night-3);font-weight:600;color:var(--trail)">Mer 18 · footing 30 min · ~350 g</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Petit déj</td><td>Tartines + fromage blanc + fruit</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Midi</td><td><strong>Gnocchis tomate-basilic-jambon</strong> (test)</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Collation</td><td>Banane + pain d'épices</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Dîner</td><td>Œufs brouillés + pain + salade de tomates</td></tr><tr><td colspan="2" style="background:var(--night-3);font-weight:600;color:var(--trail)">Jeu 19 · hockey · ~420 g</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Petit déj</td><td><strong>Pancakes banane-miel</strong> (test)</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Midi</td><td><strong>Bol de riz teriyaki poulet</strong> (test)</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">1 h avant séance</td><td>Banane</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Dîner</td><td><strong>Pâtes beurre-citron-jambon</strong></td></tr><tr><td colspan="2" style="background:var(--night-3);font-weight:600;color:var(--trail)">Ven 20 · trail 12 km + test gel caféiné · ~420 g</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Petit déj</td><td>Pain + confiture + banane + café (habituel)</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Midi</td><td>Riz + saumon + courgettes</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Collation</td><td>Banane avant la sortie</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Dîner</td><td>Poulet rôti + pommes de terre vapeur + carottes</td></tr><tr><td colspan="2" style="background:var(--night-3);font-weight:600;color:var(--trail)">Sam 21 · match Valence 19h30 · ~450 g</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Petit déj</td><td>Pain + miel + banane + yaourt</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Midi (12h)</td><td>Pâtes + poulet + compote (gros repas de glucides)</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">16h</td><td>Banane + pain d'épices</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Pendant</td><td>Eau + électrolytes</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Après (21h30)</td><td>Pâtes + jambon + yaourt, ou riz au lait</td></tr><tr><td colspan="2" style="background:var(--night-3);font-weight:600;color:var(--trail)">Dim 22 · repos · ~400 g</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Petit déj</td><td>Pain + confiture + œufs</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Midi</td><td>Poulet rôti + purée + haricots verts</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Collation</td><td>Compote + yaourt</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">Dîner</td><td>Riz + poisson + légumes cuits</td></tr><tr><td style="white-space:nowrap;color:var(--text-dim)">À faire</td><td>Les courses de la semaine de course</td></tr></tbody></table></div>
+
+  <div class="card"><div class="card-title">📌 Règles du taper</div><div class="stat-row"><div class="stat-label">Protéines</div><div class="stat-value" style="font-size:12px">1 portion à chaque repas (~100-110 g/jour)</div></div><div class="stat-row"><div class="stat-label">Fibres</div><div class="stat-value" style="font-size:12px">Légumes cuits OK jusqu'au lundi 23, puis très peu</div></div><div class="stat-row"><div class="stat-label">Tests</div><div class="stat-value" style="font-size:12px">Mar 17 → jeu 19 : les recettes de J-3 à J-1 se testent</div></div><div class="stat-row"><div class="stat-label">Rien de nouveau</div><div class="stat-value" style="font-size:12px">Aucun aliment inconnu après le 18</div></div></div>
+
+  <div class="card"><div class="card-title">📅 Mer 25 · J-3 · ~550 g</div><table class="table"><thead><tr><th>Heure</th><th>Menu</th><th>≈ g</th></tr></thead><tbody><tr><td>7h</td><td>Pain blanc + confiture + banane + jus de pomme</td><td>125</td></tr><tr><td>10h</td><td>Yaourt nature + miel + pain d'épices</td><td>45</td></tr><tr><td>12h30</td><td><strong>Bol de riz teriyaki poulet</strong> + compote</td><td>110</td></tr><tr><td>16h</td><td>Banane + 4 Petit-Beurre + jus</td><td>80</td></tr><tr><td>19h30</td><td><strong>Gnocchis tomate-basilic-jambon</strong> + pain + riz au lait</td><td>165</td></tr><tr><td>21h30</td><td>Pain + miel</td><td>35</td></tr></tbody></table></div>
+
+  <div class="card"><div class="card-title">📅 Jeu 26 · J-2 · ~640 g</div><table class="table"><thead><tr><th>Heure</th><th>Menu</th><th>≈ g</th></tr></thead><tbody><tr><td>7h</td><td><strong>Pancakes banane-miel</strong> + jus de pomme</td><td>150</td></tr><tr><td>10h</td><td>2 compotes + 4 Petit-Beurre</td><td>60</td></tr><tr><td>12h30</td><td><strong>Risotto poulet-citron</strong> + pain + riz au lait</td><td>160</td></tr><tr><td>16h</td><td>Banane + pain d'épices + jus</td><td>85</td></tr><tr><td>19h30</td><td><strong>Pâtes beurre-citron-jambon</strong> + pain + compote</td><td>155</td></tr><tr><td>21h30</td><td>Riz au lait</td><td>25</td></tr></tbody></table></div>
+
+  <div class="card"><div class="card-title">📅 Ven 27 · J-1 · ~550 g</div><table class="table"><thead><tr><th>Heure</th><th>Menu</th><th>≈ g</th></tr></thead><tbody><tr><td>7h</td><td>Pain blanc + miel + banane + jus de pomme</td><td>130</td></tr><tr><td>10h</td><td>Compote + 4 Petit-Beurre</td><td>45</td></tr><tr><td>12h30</td><td>Riz blanc + poulet nature + pain (sans sauce grasse)</td><td>125</td></tr><tr><td>16h</td><td>Banane + compote + pain d'épices</td><td>75</td></tr><tr><td>19h</td><td><strong>Pâtes beurre + jambon</strong> + pain + compote (repas simple, connu)</td><td>155</td></tr><tr><td>21h30</td><td>Riz au lait</td><td>25</td></tr></tbody></table></div>
+
+  <div class="card"><div class="card-title">🏁 Sam 28 · jour J · ~350 g</div><table class="table"><thead><tr><th>Heure</th><th>Menu</th><th>≈ g</th></tr></thead><tbody><tr><td>8h</td><td>Petit déj habituel (pain, confiture, banane, café)</td><td>100</td></tr><tr><td>12h</td><td>Riz ou pâtes + poulet, portion normale + compote</td><td>95</td></tr><tr><td>15h30</td><td>Sieste, puis banane + pain d'épices</td><td>45</td></tr><tr><td>18h30-19h</td><td>Pâtes + jambon + pain, repas léger (pasta party seulement si tu connais)</td><td>100</td></tr><tr><td>22h30</td><td>Compote + 500 ml d'eau + électrolytes</td><td>15</td></tr><tr><td>23h15</td><td>1 gel TA, puis départ</td><td>33</td></tr></tbody></table></div>
+
+  <div class="card"><div class="card-title">👨‍🍳 Recettes</div><div class="strat-block gold"><div class="strat-phase">J-2 · petit déj · ~110 g + miel</div><div class="strat-title">Pancakes banane-miel</div><div class="strat-desc"><strong>Pour 1 :</strong> 100 g de farine blanche, 1 œuf, 1 banane écrasée, 150 ml de lait (ou sans lactose), 1 c. à café de levure, 1 pincée de sel, miel (30 g).<br><strong>Étapes :</strong> Mélange tout en pâte lisse, cuis à la poêle antiadhésive avec très peu de beurre (2 min par face), nappe de miel.</div></div><div class="strat-block gold"><div class="strat-phase">J-3 · déjeuner · ~95 g</div><div class="strat-title">Bol de riz teriyaki poulet</div><div class="strat-desc"><strong>Pour 1 :</strong> 110 g de riz cru, 130 g de blanc de poulet en lamelles, 2 c. à soupe de sauce soja, 1 c. à soupe de miel, gingembre râpé, carottes cuites.<br><strong>Étapes :</strong> Cuis le riz. Saisis le poulet 6-8 min, ajoute soja + miel + gingembre jusqu'à caraméliser. Sers sur le riz avec les carottes.</div></div><div class="strat-block gold"><div class="strat-phase">J-3 · dîner · ~110 g</div><div class="strat-title">Gnocchis tomate-basilic-jambon</div><div class="strat-desc"><strong>Pour 1 :</strong> 350 g de gnocchis, 200 g de passata lisse, 2 tranches de jambon blanc, basilic, 1 c. à café d'huile d'olive, sel.<br><strong>Étapes :</strong> Chauffe la passata 8 min avec l'huile et le sel. Cuis les gnocchis (ils remontent en 2 min), mélange avec la sauce, le jambon en dés et le basilic.</div></div><div class="strat-block gold"><div class="strat-phase">J-2 · déjeuner · ~95 g</div><div class="strat-title">Risotto poulet-citron</div><div class="strat-desc"><strong>Pour 1 :</strong> 120 g de riz rond (arborio), 130 g de poulet, 400 ml de bouillon de volaille chaud, ½ citron (zeste + jus), 20 g de parmesan, 1 noisette de beurre.<br><strong>Étapes :</strong> Nacre le riz 1 min dans le beurre, ajoute le bouillon louche par louche pendant 18 min en remuant. Saisis le poulet à part. Termine avec citron et parmesan.</div></div><div class="strat-block gold"><div class="strat-phase">J-2 / J-1 · dîner · ~110 g</div><div class="strat-title">Pâtes beurre-citron-jambon</div><div class="strat-desc"><strong>Pour 1 :</strong> 150 g de pâtes blanches crues, 15 g de beurre, zeste d'½ citron, 2 tranches de jambon blanc, poivre, 1 louche d'eau de cuisson.<br><strong>Étapes :</strong> Cuis les pâtes, mélange hors du feu avec beurre, zeste, jambon en lanières et eau de cuisson pour lier. Pas de parmesan la veille de course.</div></div><div class="strat-block gold"><div class="strat-phase">dessert · ~40 g par portion de 200 g</div><div class="strat-title">Riz au lait vanille express</div><div class="strat-desc"><strong>Pour 1 :</strong> 60 g de riz rond, 400 ml de lait (ou sans lactose), 1 c. à soupe de sucre, vanille (2 portions).<br><strong>Étapes :</strong> Mijote 25 min à feu doux en remuant jusqu'à épaississement. Se garde 2 jours au frais.</div></div></div>
+
+  <div class="card"><div class="card-title">🛒 Courses · semaine du 16 au 22 nov (taper)</div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Pâtes blanches (500 g)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Riz (500 g)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Pain blanc</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Poulet (600 g)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Œufs (6)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Jambon blanc (4 tranches)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Carottes et courgettes (cuites)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Bananes (6)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Compotes en gourde (6)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Yaourts nature (4)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Confiture et miel</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Cocas</div></div></div>
+
+  <div class="card"><div class="card-title">🛒 Courses · semaine de course (à faire le 22 ou 23)</div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Pâtes blanches (1 kg)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Riz basmati (500 g) + riz rond arborio (500 g)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Gnocchis (2 × 500 g)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Pain blanc ou baguettes (4)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Farine blanche (500 g)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Petit-Beurre (2 paquets)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Cocas (2)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Poulet blanc (800 g)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Jambon blanc (10 tranches)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Œufs (10)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Parmesan (60 g)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Bananes (12)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Citrons (2)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Compotes en gourde (12)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Jus de pomme sans pulpe (3 L)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Lait (1,5 L) ou sans lactose</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Yaourts nature (4)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Bouillon de volaille (1 L)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Passata lisse (700 g) + basilic frais</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Sauce soja, gingembre, miel, confiture</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Beurre et huile d'olive</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Eau (6 L)</div></div></div>
+
+  <div class="card"><div class="card-title">⚠️ À éviter</div><div class="stat-row"><div class="stat-label">À éviter du mer 25 au sam 28</div><div class="stat-value" style="font-size:12px">crudités, salades, céréales complètes, légumineuses, épices fortes, fritures, alcool, tout aliment jamais testé</div></div></div>
+
+  </section>
+
+<!-- ═══ MONTRE ═══ -->
+<section id="montre" class="section">
+  <div class="card"><div class="card-title">⌚ Fenix 7 Pro · parcours</div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Importer le GPX comme <strong>Parcours</strong> (Garmin Connect → Parcours → Importer) et l'envoyer sur la montre</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Activer <strong>ClimbPro</strong> sur le parcours chargé</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Si disponible : créer un plan <strong>PacePro à 10h45</strong> (effort constant) et l'envoyer</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Activer l'alerte « hors parcours »</div></div></div>
+
+  <div class="card"><div class="card-title">⌚ Profil Trail · écrans et alertes</div><table class="table"><thead><tr><th>Réglage</th><th>Valeur</th></tr></thead><tbody><tr><td>Pause automatique</td><td>Désactivée</td></tr><tr><td>GPS</td><td>Mode standard (pas d'économie qui dégrade la précision)</td></tr><tr><td>Écran 1</td><td>FC · temps total · distance</td></tr><tr><td>Écran 2</td><td>Allure · D+ restant · heure</td></tr><tr><td>Écran 3</td><td>Carte du parcours (ClimbPro s'affiche sur les montées)</td></tr><tr><td>Alerte FC haute</td><td>132 bpm · à désactiver après Chaponost</td></tr><tr><td>Alerte durée</td><td>1 seule, en répétition toutes les 20 min</td></tr></tbody></table><div class="alert alert-info" style="margin-top:10px;font-size:12px">Règle des bips : 1er bip = tu bois · 2e bip = tu bois et tu manges (une prise toutes les 40 min).</div></div>
+
+  <div class="card"><div class="card-title">⌚ Sécurité, batterie, froid</div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">LiveTrack activé avant le départ · lien envoyé la veille · téléphone connecté à la montre</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Détection d'incident et contact d'urgence activés</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Montre chargée à 100 % la veille</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Affichage permanent et rétroéclairage automatique coupés · écran tactile verrouillé</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Ceinture cardio si tu en as une (la FC au poignet peut décrocher par grand froid)</div></div><div class="check-item shop-item" onclick="toggleShop(this)"><div class="check-box"></div><div class="check-text">Config testée en entier sur la sortie de 12 km du 20 novembre</div></div></div>
+
+  </section>
+
+<!-- ═══ BOIRE ═══ -->
+<section id="hydratation" class="section">
+  <div class="card"><div class="card-title">🥤 Avant la course</div><table class="table"><thead><tr><th>Quand</th><th>Quoi</th></tr></thead><tbody><tr><td>Vendredi (J-1)</td><td>2 à 2,5 L d'eau dans la journée · dîner simple à 19h</td></tr><tr><td>Samedi matin</td><td>300 ml avec le petit déj, puis bois régulièrement jusqu'à 18h (~2-2,5 L au total)</td></tr><tr><td>H-1h · ~22h30</td><td>500 ml d'eau + 1 pastille d'électrolytes, à boire en 30 min</td></tr><tr><td>H-30 min</td><td>Compote ou banane</td></tr><tr><td>H-15 min · ~23h15</td><td>1 gel TA + 150-200 ml d'eau · pas plus juste avant le départ</td></tr></tbody></table><div class="alert alert-warning" style="margin-top:10px;font-size:12px">Ces horaires sont calés sur un départ à 23h30 : décale-les selon ta vague (jusqu'à 00h30).</div></div>
+
+  <div class="card"><div class="card-title">🥤 Pendant la course</div><div class="stat-row"><div class="stat-label">Boire</div><div class="stat-value" style="font-size:12px">150 ml toutes les 20 min (~450 ml/h), moins si tu urines trop</div></div><div class="stat-row"><div class="stat-label">Flask 1</div><div class="stat-value" style="font-size:12px">Eau</div></div><div class="stat-row"><div class="stat-label">Flask 2</div><div class="stat-value" style="font-size:12px">Isotonique 2 premières h, puis eau + 1 pastille</div></div><div class="stat-row"><div class="stat-label">Manger</div><div class="stat-value" style="font-size:12px">1 prise toutes les 40-45 min en alternant gel, gommes, solide, Coca</div></div><div class="stat-row"><div class="stat-label">Jamais</div><div class="stat-value" style="font-size:12px">Gel + gommes en même temps · plus de 600 ml/h</div></div><div class="stat-row"><div class="stat-label">Nuit · km 17-46</div><div class="stat-value" style="font-size:12px">Salé et chaud : bouillon, solide</div></div><div class="stat-row"><div class="stat-label">Aube · km 46-66</div><div class="stat-value" style="font-size:12px">Sucré léger, banane, café</div></div><div class="stat-row"><div class="stat-label">Final · km 66+</div><div class="stat-value" style="font-size:12px">Gels caféinés</div></div></div>
+
+  <div class="card"><div class="card-title">⛺ Au ravito · priorité : remplir les 2 flasks</div><table class="table"><thead><tr><th>Ravito</th><th>À faire</th><th>Durée</th></tr></thead><tbody><tr><td><strong>Saint-Christo</strong> · km 17</td><td>Remplir les flasks · soupe chaude + pain + jambon ou saucisson · banane ou clémentine</td><td>3 min</td></tr><tr><td><strong>Sainte-Catherine</strong> · km 32</td><td>Coca dégazé · soupe · pain + emmental ou saucisson · compote · 2e isotonique · remettre une couche avant le Signal</td><td>5 min</td></tr><tr><td><strong>Le Camp</strong> · km 46</td><td>Remplir les flasks · soupe + pain + banane · thé chaud</td><td>4 min</td></tr><tr><td><strong>Soucieu</strong> · km 60</td><td>Café ou thé · soupe · pain + jambon · banane · flask avec pastille · gel caféiné en repartant</td><td>3 min</td></tr><tr><td><strong>Chaponost</strong> · km 67</td><td>Coca · compote · café · abricots secs · remplir les flasks · gel caféiné en repartant</td><td>2 min</td></tr></tbody></table><div style="font-size:12px;color:var(--text-dim);margin-top:8px">Contenu des ravitos confirmé par le programme officiel 2026 (voir l'onglet Infos). Sodium : 1 pastille par flask d'électrolytes + un bouillon à chaque ravito.</div></div>
+
+  </section>
+
+<!-- ═══════════════════════════════════ MATÉRIEL ═══════════════════════════════════ -->
+<section id="materiel" class="section">
+  <div class="card">
+    <div class="card-title">🎒 Checklist complète
+      <span id="check-progress" class="badge badge-green" style="margin-left:auto">0/0</span>
+      <span class="save-indicator" id="check-saved">✓</span>
+    </div>
+    <div id="checklist-container">
+      <div class="check-category">🔴 Matériel OBLIGATOIRE réglementation</div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Sac de course trail</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Chasuble dossard portée <strong>en dernière couche</strong> (la puce doit être lisible)</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Batterie externe pour le téléphone (fortement recommandée) + appli LiveTrail activée</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Réserve alimentaire dans le sac (gels, barres)</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Aucun bâton (interdits)</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Téléphone chargé + app LiveTrail installée et activée</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Gobelet personnel 15cl minimum (zéro déchet)</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">1 litre d'eau minimum au départ</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Lampe frontale principale chargée 100 % + <strong>piles ou batterie de rechange (obligatoire)</strong></div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Lampe frontale de secours — piles neuves</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Couverture de survie 1,40 × 2 m minimum</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Sifflet</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Bande élastique adhésive 100 × 6 cm</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Veste imperméable à capuche</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Pièce d'identité</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Dossard récupéré et épinglé</div></div>
+
+      <div class="check-category">🟠 Kit grand froid (activé ou non par l'organisation : à confirmer la veille)</div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Lunettes de protection</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Bonnet chaud</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Gants chauds et imperméables</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Surpantalon imperméable</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">2e couche chaude</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Chaussures de trail robustes et fermées</div></div>
+
+      <div class="check-category">👟 Chaussures & Vêtements</div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Speedgoat 7 — lacets vérifiés</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Chaussettes trail anti-ampoules</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Collant ou cuissard long</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">T-shirt manches longues technique</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Gants légers (de course)</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Bonnet ou bandeau oreilles (de course)</div></div>
+
+      <div class="check-category">💊 Nutrition</div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">8 gels TA Jelly</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">3 gels caféinés ☕</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">1 gel secours</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">2 sachets isotonique TA</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">6 pastilles électrolytes TA</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">6 sachets gommes TA</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Réserve alimentaire de secours (obligatoire) : gels, gommes, barres</div></div>
+
+      <div class="check-category">🩹 Confort & Sécurité</div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Vaseline anti-frottements (cuisses, pieds, mamelons)</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Pansements ampoules type Compeed</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Magnésium comprimés (crampes)</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Chargeur portable Fenix</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Fenix 7 Pro chargée 100% + GPX chargé</div></div>
+
+      <div class="check-category">🎒 Sac de drop (à récupérer à l'arrivée)</div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Remettre une couche (sac) pour l'arrivée</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Chaussures confortables</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Serviette (vestiaires et douches à l'arrivée)</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Boisson de récupération</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Téléphone chargeur</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ ACHATS ═══════════════════════════════════ -->
+<section id="achats" class="section">
+
+  <div class="card">
+    <div class="card-title">🛒 Liste d'achats
+      <span id="achat-progress" class="badge badge-gold" style="margin-left:auto">0/0 achetés</span>
+    </div>
+
+    <div class="achat-category">🔴 PRIORITÉ HAUTE — Obligatoire réglementation</div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Couverture de survie 1,40×2m <span class="achat-priority priority-high">Obligatoire</span></div>
+        <div class="achat-links">
+          <a href="https://www.decathlon.fr/p/couverture-de-survie-trail/_/R-p-165257" target="_blank" class="achat-link">Decathlon</a>
+          <a href="https://www.amazon.fr/s?k=couverture+survie+trail" target="_blank" class="achat-link">Amazon</a>
+        </div>
+      </div>
+      <div class="achat-price">~5€</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Sifflet trail <span class="achat-priority priority-high">Obligatoire</span></div>
+        <div class="achat-links">
+          <a href="https://www.decathlon.fr/p/sifflet-de-securite/_/R-p-340614" target="_blank" class="achat-link">Decathlon</a>
+          <a href="https://www.amazon.fr/s?k=sifflet+trail+course" target="_blank" class="achat-link">Amazon</a>
+        </div>
+      </div>
+      <div class="achat-price">~3€</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Bande élastique adhésive 100×6cm <span class="achat-priority priority-high">Obligatoire</span></div>
+        <div class="achat-links">
+          <a href="https://www.decathlon.fr/p/bande-elastique-adhesive-strapping/_/R-p-161060" target="_blank" class="achat-link">Decathlon</a>
+          <a href="https://www.amazon.fr/s?k=bande+elastique+adhesive+strapping" target="_blank" class="achat-link">Amazon</a>
+        </div>
+      </div>
+      <div class="achat-price">~5€</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Gobelet réutilisable 15cl min <span class="achat-priority priority-high">Obligatoire</span></div>
+        <div class="achat-links">
+          <a href="https://www.decathlon.fr/p/gobelet-souple-150-ml/_/R-p-325521" target="_blank" class="achat-link">Decathlon</a>
+          <a href="https://www.amazon.fr/s?k=gobelet+souple+trail+150ml" target="_blank" class="achat-link">Amazon</a>
+        </div>
+      </div>
+      <div class="achat-price">~3€</div>
+    </div>
+
+    <div class="achat-category">🟠 COMMANDE TA ENERGY — à passer maintenant (retirer ton stock actuel)</div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Gels TA × 11 · saveurs variées (course 9 + tests 2) <span class="achat-priority priority-high">Course</span></div>
+        <div class="achat-links"><a href="https://www.ta-energy.com/products/energie-gels" target="_blank" class="achat-link">TA officiel</a><a href="https://www.i-run.fr/ta-energy/" target="_blank" class="achat-link">i-Run</a></div>
+      </div>
+      <div class="achat-price">~27,50 €</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Gel caféiné (de mon sac) TA × 4 · Café ×2 + Wild Berry ×2 (course 3 + test 1) <span class="achat-priority priority-high">Course</span></div>
+        <div class="achat-links"><a href="https://www.alltricks.fr/F-11928-nutrition/P-2549214-gel_energetique_ta_energy___cafeine_cafe___40ml" target="_blank" class="achat-link">Alltricks Café</a><a href="https://www.snowleader.com/energy-gel-wild-berry-TAEN00030.html" target="_blank" class="achat-link">Snowleader Wild Berry</a></div>
+      </div>
+      <div class="achat-price">~10 €</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Gommes TA × 6 sachets · 4 sans caféine (litchi 2× sel…) + 2 caféinées <span class="achat-priority priority-high">Course</span></div>
+        <div class="achat-links"><a href="https://www.ta-energy.com/products/energie-gommes" target="_blank" class="achat-link">TA officiel</a><a href="https://www.alltricks.fr/F-11928-nutrition/P-2173335-gommes_energetiques___cafeine_ta_energy_cassis___30g" target="_blank" class="achat-link">Alltricks Cassis</a><a href="https://www.alltricks.fr/F-11928-nutrition/P-2173337-gommes_energetiques___cafeine_ta_energy_cola___30g" target="_blank" class="achat-link">Alltricks Cola</a></div>
+      </div>
+      <div class="achat-price">~12 €</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Isotonique TA × 4 sachets (course 2 + test 1 + 1 de marge) <span class="achat-priority priority-high">Course</span></div>
+        <div class="achat-links"><a href="https://www.ta-energy.com" target="_blank" class="achat-link">TA officiel</a><a href="https://www.i-run.fr/ta-energy/" target="_blank" class="achat-link">i-Run</a></div>
+      </div>
+      <div class="achat-price">~16 € (à vérifier)</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Pastilles électrolytes TA × 1 tube (6 pour la course + tests) <span class="achat-priority priority-high">Course</span></div>
+        <div class="achat-links"><a href="https://www.ta-energy.com/products/pastilles-electrolytes" target="_blank" class="achat-link">TA officiel</a></div>
+      </div>
+      <div class="achat-price">~10 €</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">MaltoDE6X TA (carbo loading J-3 à J-1, seulement si appétit faible) <span class="achat-priority priority-med">Optionnel</span></div>
+        <div class="achat-links"><a href="https://www.i-run.fr/ta-energy/" target="_blank" class="achat-link">i-Run</a></div>
+      </div>
+      <div class="achat-price">à vérifier</div>
+    </div>
+
+    <div class="achat-category">🟡 PRIORITÉ MOYENNE — Confort & Récupération</div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Vitamine D3 2000 UI <span class="achat-priority priority-med">Hiver</span></div>
+        <div class="achat-links">
+          <a href="https://www.amazon.fr/s?k=vitamine+D3+2000+UI" target="_blank" class="achat-link">Amazon</a>
+          <a href="https://www.pharmacie.fr/s?q=vitamine+D3" target="_blank" class="achat-link">Pharmacie</a>
+        </div>
+      </div>
+      <div class="achat-price">~8€</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Magnésium bisglycinate <span class="achat-priority priority-med">Récupération</span></div>
+        <div class="achat-links">
+          <a href="https://www.amazon.fr/s?k=magnesium+bisglycinate+300mg" target="_blank" class="achat-link">Amazon</a>
+          <a href="https://www.iherb.com/c/magnesium-bisglycinate" target="_blank" class="achat-link">iHerb</a>
+        </div>
+      </div>
+      <div class="achat-price">~15€</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Vaseline anti-frottements <span class="achat-priority priority-med">Confort</span></div>
+        <div class="achat-links">
+          <a href="https://www.decathlon.fr/p/baume-anti-frottements/_/R-p-325488" target="_blank" class="achat-link">Decathlon</a>
+          <a href="https://www.amazon.fr/s?k=vaseline+anti+frottement+running" target="_blank" class="achat-link">Amazon</a>
+        </div>
+      </div>
+      <div class="achat-price">~5€</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Pansements ampoules Compeed <span class="achat-priority priority-med">Secours</span></div>
+        <div class="achat-links">
+          <a href="https://www.amazon.fr/s?k=compeed+ampoules" target="_blank" class="achat-link">Amazon</a>
+          <a href="https://www.decathlon.fr/s?Ntt=compeed" target="_blank" class="achat-link">Decathlon</a>
+        </div>
+      </div>
+      <div class="achat-price">~6€</div>
+    </div>
+
+    <div class="achat-item" onclick="toggleAchat(this)">
+      <div class="achat-check"></div>
+      <div class="achat-content">
+        <div class="achat-name">Navette Saint-Étienne (si pas réservée) <span class="achat-priority priority-high">Logistique</span></div>
+        <div class="achat-links">
+          <a href="https://www.saintelyon.com/navettes" target="_blank" class="achat-link">Site officiel Saintelyon</a>
+        </div>
+      </div>
+      <div class="achat-price">Voir site</div>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <div class="card-title">💰 Budget total estimé</div>
+    <div class="stat-row"><div class="stat-label">Matériel obligatoire</div><div class="stat-value">~16€</div></div>
+    <div class="stat-row"><div class="stat-label">Nutrition course</div><div class="stat-value">~75€</div></div>
+    <div class="stat-row"><div class="stat-label">Compléments hiver</div><div class="stat-value">~23€</div></div>
+    <div class="stat-row"><div class="stat-label">Confort</div><div class="stat-value">~11€</div></div>
+    <div class="stat-row" style="border-top:1px solid var(--border);margin-top:8px;padding-top:16px"><div class="stat-label" style="font-weight:600">Total estimé</div><div class="stat-value" style="color:var(--gold);font-size:16px">~124€</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ ZONES FC ═══════════════════════════════════ -->
+<section id="zones" class="section">
+  <div class="card">
+    <div class="card-title">❤️ Zones FC — Karvonen</div>
+    <div class="stat-row"><div class="stat-label">FC max réelle</div><div class="stat-value" style="color:var(--red)">181 bpm</div></div>
+    <div class="stat-row"><div class="stat-label">FC repos</div><div class="stat-value" style="color:var(--green)">41 bpm</div></div>
+    <div class="stat-row"><div class="stat-label">FC réserve</div><div class="stat-value">140 bpm</div></div>
+    <div style="margin-top:16px">
+      <div class="fc-row"><div class="fc-label">Z1 Récup</div><div class="fc-bar"><div class="fc-fill" style="width:35%;background:#64748b"></div></div><div class="fc-value" style="color:var(--text-dim)">&lt; 118</div></div>
+      <div class="fc-row"><div class="fc-label">Z2 Endur ✅</div><div class="fc-bar"><div class="fc-fill" style="width:55%;background:var(--green)"></div></div><div class="fc-value" style="color:var(--green)">125-139</div></div>
+      <div class="fc-row"><div class="fc-label">Z3 Tempo</div><div class="fc-bar"><div class="fc-fill" style="width:68%;background:var(--gold)"></div></div><div class="fc-value" style="color:var(--gold)">139-153</div></div>
+      <div class="fc-row"><div class="fc-label">Z4 Seuil</div><div class="fc-bar"><div class="fc-fill" style="width:82%;background:orange"></div></div><div class="fc-value" style="color:orange">153-167</div></div>
+      <div class="fc-row"><div class="fc-label">Z5 VO2max</div><div class="fc-bar"><div class="fc-fill" style="width:100%;background:var(--red)"></div></div><div class="fc-value" style="color:var(--red)">167-181</div></div>
+    </div>
+    <div style="margin-top:16px;padding:12px;background:rgba(16,185,129,0.1);border-radius:8px;border:1px solid rgba(16,185,129,0.3)">
+      <div style="font-size:12px;color:var(--green);font-weight:600;margin-bottom:4px">🏁 Zone cible Saintelyon</div>
+      <div style="font-size:13px">Z2 stricte · <strong>125-132 bpm</strong> · Alarme Fenix : 132 bpm</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-top:4px">⚠️ Jamais Z4-Z5 · Marche obligatoire si FC &gt; 135 bpm en montée</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ Protocole fractionné</div>
+    <table class="table">
+      <thead><tr><th>Rep</th><th>Vitesse tapis</th><th>FC cible</th><th>Récup</th></tr></thead>
+      <tbody>
+        <tr><td>1-2</td><td>12,0-12,5 km/h</td><td>~155 bpm</td><td>90 sec</td></tr>
+        <tr><td>3-4</td><td>13,0 km/h</td><td>~162 bpm</td><td>90 sec</td></tr>
+        <tr><td>5-6</td><td>13,5-14,0 km/h</td><td>~165 bpm</td><td>90 sec</td></tr>
+        <tr><td>7-8</td><td>14,5-15,0 km/h</td><td><span style="color:var(--red)">&gt; 167 bpm</span></td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ OBJECTIF ═══════════════════════════════════ -->
+<section id="objectif" class="section">
+  <div class="card">
+    <div class="card-title">📈 Progression prépa</div>
+    <table class="table">
+      <thead><tr><th>Date</th><th>Sortie</th><th>Dist</th><th>D+</th><th>FC</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--text-dim)">27 juil</td><td>Pause fraîcheur</td><td>25km</td><td>1046m</td><td style="color:var(--gold)">133</td></tr>
+        <tr><td style="color:var(--text-dim)">13 sept</td><td>Boucle Bessenay</td><td>32,9km</td><td>1164m</td><td style="color:var(--green)">125</td></tr>
+        <tr><td style="color:var(--text-dim)">3 oct</td><td>Nocturne 🌙</td><td>20,7km</td><td>743m</td><td style="color:var(--green)">128</td></tr>
+        <tr><td style="color:var(--text-dim)">24 oct</td><td>Choc 1/2</td><td>30km</td><td>1061m</td><td style="color:var(--green)">124</td></tr>
+        <tr><td style="color:var(--text-dim)">25 oct</td><td>Choc 2/2</td><td>20,7km</td><td>764m</td><td style="color:var(--green)">~128</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎯 Pronostic temps final</div>
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:var(--text-dim)">🔴 Difficile</span><span>13h-14h</span></div>
+      <div class="obj-bar"><div class="obj-fill" style="width:30%;background:#ef4444"></div></div>
+    </div>
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:var(--text-dim)">🟠 Réaliste</span><span>10h30-11h30</span></div>
+      <div class="obj-bar"><div class="obj-fill" style="width:60%;background:var(--gold)"></div></div>
+    </div>
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:var(--text-dim)">🟢 Pronostic coach</span><span style="color:var(--trail);font-weight:700">10h30 → 11h15</span></div>
+      <div class="obj-bar"><div class="obj-fill" style="width:75%"></div></div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:var(--text-dim)">🔵 Objectif B</span><span style="color:var(--gold);font-weight:700">9h15-10h30</span></div>
+      <div class="obj-bar"><div class="obj-fill" style="width:90%"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">✅ Checkpoints prépa</div>
+    <div class="stat-row"><div class="stat-label">Sortie 32,9 km Z2</div><div class="stat-value" style="color:var(--green)">✅ Fait</div></div>
+    <div class="stat-row"><div class="stat-label">Nocturne 20 km</div><div class="stat-value" style="color:var(--green)">✅ Fait</div></div>
+    <div class="stat-row"><div class="stat-label">Back to back 50 km</div><div class="stat-value" style="color:var(--green)">✅ Fait</div></div>
+    <div class="stat-row"><div class="stat-label">Fractionné 167 bpm</div><div class="stat-value" style="color:var(--green)">✅ Fait</div></div>
+    <div class="stat-row"><div class="stat-label">Sortie 35-38 km</div><div class="stat-value" style="color:var(--gold)">⏳ avant le 8 nov</div></div>
+    <div class="stat-row"><div class="stat-label">2e nocturne</div><div class="stat-value" style="color:var(--gold)">⏳ À caler</div></div>
+    <div class="stat-row"><div class="stat-label">Nutrition testée</div><div class="stat-value" style="color:var(--gold)">⏳ En cours</div></div>
+    <div class="stat-row"><div class="stat-label">Taper 2 semaines</div><div class="stat-value" style="color:var(--text-dim)">📅 9 nov</div></div>
+    <div class="stat-row"><div class="stat-label">🏁 Saintelyon</div><div class="stat-value" style="color:var(--trail)">📅 28 nov</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💊 Compléments hiver</div>
+    <div class="stat-row"><div class="stat-label">Vitamine D · matin</div><div class="stat-value">2 000 UI</div></div>
+    <div class="stat-row"><div class="stat-label">Oméga-3 · repas</div><div class="stat-value">2-3g</div></div>
+    <div class="stat-row"><div class="stat-label">Magnésium · soir</div><div class="stat-value">300-400 mg</div></div>
+    <div class="stat-row"><div class="stat-label">Vitamine C · matin</div><div class="stat-value">500 mg</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🏆 Records Saintelyon</div>
+    <table class="table">
+      <thead><tr><th>Année</th><th>Vainqueur H</th><th>Vainqueure F</th></tr></thead>
+      <tbody>
+        <tr><td>2025</td><td>Cachard · 5h36</td><td>Martin · 6h42</td></tr>
+        <tr><td>2024</td><td>Cardin · 5h52</td><td>Goncalves · 7h03</td></tr>
+        <tr><td>2023</td><td>Cardin · 5h41</td><td>Roux · 6h39</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:12px;color:var(--text-dim);margin-top:8px">Taux d'abandon : 7,4% en 2024 et 2025 — une course qu'on finit si on respecte la nuit et la météo.</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ MÉTÉO ═══════════════════════════════════ -->
+<section id="meteo" class="section">
+
+  <div class="card">
+    <div class="card-title">🌦️ Météo J-1 & Jour J</div>
+    <div class="alert alert-warning">⚠️ Fin novembre dans les Monts du Lyonnais — tout est possible. Prépare le kit grand froid même si la météo semble clémente.</div>
+    <div style="margin-top:12px">
+      <a class="meteo-link" href="https://www.meteofrance.com/previsions-meteo-france/saint-etienne/42000" target="_blank">
+        <div class="meteo-icon">🌡️</div>
+        <div class="meteo-info"><div class="meteo-title">Saint-Étienne — Départ</div><div class="meteo-desc">Météo France · Prévisions 10 jours</div></div>
+        <div class="meteo-arrow">→</div>
+      </a>
+      <a class="meteo-link" href="https://www.meteofrance.com/previsions-meteo-france/saint-martin-en-haut/69850" target="_blank">
+        <div class="meteo-icon">⛰️</div>
+        <div class="meteo-info"><div class="meteo-title">Saint-Martin-en-Haut — Monts du Lyonnais</div><div class="meteo-desc">Météo France · Point culminant ~760m</div></div>
+        <div class="meteo-arrow">→</div>
+      </a>
+      <a class="meteo-link" href="https://www.meteofrance.com/previsions-meteo-france/lyon/69000" target="_blank">
+        <div class="meteo-icon">🏁</div>
+        <div class="meteo-info"><div class="meteo-title">Lyon — Arrivée Halle Tony Garnier</div><div class="meteo-desc">Météo France · Prévisions arrivée</div></div>
+        <div class="meteo-arrow">→</div>
+      </a>
+      <a class="meteo-link" href="https://www.windy.com/?48.5,4.0,7" target="_blank">
+        <div class="meteo-icon">💨</div>
+        <div class="meteo-info"><div class="meteo-title">Windy — Carte vent & précipitations</div><div class="meteo-desc">Carte interactive · Très précis pour le trail</div></div>
+        <div class="meteo-arrow">→</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📜 Histoire météo Saintelyon</div>
+    <div class="stat-row"><div class="stat-label">2025</div><div class="stat-value" style="font-size:12px">Neige fondue + boue liquide</div></div>
+    <div class="stat-row"><div class="stat-label">2024</div><div class="stat-value" style="font-size:12px">Météo clémente · brouillard épais</div></div>
+    <div class="stat-row"><div class="stat-label">2023</div><div class="stat-value" style="font-size:12px" style="color:var(--red)">-5 à -7°C · neige · verglas</div></div>
+    <div class="stat-row"><div class="stat-label">2022</div><div class="stat-value" style="font-size:12px">Boueuse · glaciale · brouillard</div></div>
+    <div class="stat-row"><div class="stat-label">2018</div><div class="stat-value" style="font-size:12px">Pluie continue · nombreux abandons</div></div>
+    <div class="stat-row"><div class="stat-label">1990</div><div class="stat-value" style="font-size:12px" style="color:var(--red)">Tempête neige · arrêt à km 32 · 96 finishers</div></div>
+    <div class="alert alert-warning" style="margin-top:12px;font-size:12px">💡 La règle d'or : couche de base qui sèche vite + couche chaude dans le sac + gants de rechange. Le froid est piégeux car on transpire en montée et on gèle dans les descentes marchées.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🧥 Tenue selon conditions</div>
+    <div class="stat-row"><div class="stat-label">&gt; 8°C · sec</div><div class="stat-value" style="font-size:12px">ML technique + coupe-vent + gants légers</div></div>
+    <div class="stat-row"><div class="stat-label">3-8°C · humide</div><div class="stat-value" style="font-size:12px">ML + softshell + coupe-vent + gants chauds</div></div>
+    <div class="stat-row"><div class="stat-label">&lt; 3°C · gel</div><div class="stat-value" style="font-size:12px">Kit grand froid complet obligatoire</div></div>
+    <div class="stat-row"><div class="stat-label">Neige / verglas</div><div class="stat-value" style="font-size:12px">Chaussures à crampons agressifs</div></div>
+  </div>
+</section>
+
+<script>
+// ═══════════════ COUNTDOWN ═══════════════
+function updateCountdown() {
+  const race = new Date('2026-11-28T23:30:00');
+  const now = new Date();
+  const diff = race - now;
+  if (diff <= 0) { ['cd-j','cd-h','cd-m','cd-s'].forEach(id => document.getElementById(id).textContent = '0'); return; }
+  document.getElementById('cd-j').textContent = Math.floor(diff/86400000);
+  document.getElementById('cd-h').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+  document.getElementById('cd-s').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ═══════════════ NAV ═══════════════
+const GROUPS=[
+ {k:'home',i:'🏠',t:'Accueil',s:[['accueil','Accueil']]},
+ {k:'prepa',i:'📅',t:'Prépa',s:[['planning','Planning'],['repas','Repas'],['achats','Achats'],['zones','Zones FC'],['objectif','Objectif']]},
+ {k:'course',i:'🏁',t:'Course',s:[['strategie','Stratégie'],['parcours','Parcours'],['ravitos','Ravitos'],['meteo','Météo']]},
+ {k:'nutri',i:'🍯',t:'Nutrition',s:[['nutrition','Plan'],['hydratation','Boire']]},
+ {k:'matos',i:'🎒',t:'Matos',s:[['materiel','Matériel'],['montre','Montre'],['infos','Infos orga']]}
+];
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const g=GROUPS.find(g=>g.s.some(x=>x[0]===id));
+  document.querySelectorAll('#tabbar button').forEach(b=>b.classList.toggle('active',b.dataset.k===g.k));
+  const sn=document.getElementById('subnav');
+  sn.innerHTML=g.s.length>1?g.s.map(x=>`<button class="nav-btn${x[0]===id?' active':''}" onclick="show('${x[0]}')">${x[1]}</button>`).join(''):'';
+  window.scrollTo(0,0);
+}
+function initUI(){
+  document.getElementById('tabbar').innerHTML=GROUPS.map(g=>`<button data-k="${g.k}" onclick="show('${g.s[0][0]}')"><span>${g.i}</span>${g.t}</button>`).join('');
+  document.querySelectorAll('.section').forEach(sec=>{
+    if(sec.id==='accueil')return;
+    [...sec.children].filter(c=>c.classList.contains('card')).forEach((c,i)=>{
+      const t=c.querySelector(':scope > .card-title'); if(!t)return;
+      const body=document.createElement('div'); body.className='cbody';
+      [...c.children].filter(x=>x!==t).forEach(x=>body.appendChild(x));
+      c.appendChild(body); c.classList.add('collapsible'); if(i>0)c.classList.add('closed');
+      t.onclick=()=>c.classList.toggle('closed');
+    });
+  });
+  // prochains jours
+  const D=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  const rows={};
+  document.querySelectorAll('#planning .day-row').forEach(r=>{rows[r.querySelector('.day-name').textContent.trim()]=r;});
+  const now=new Date(); let out='';
+  for(let k=0;k<6;k++){
+    const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+k);
+    const key=D[d.getDay()]+' '+d.getDate(); const r=rows[key]; if(!r)continue;
+    const dt=r.querySelector('.day-detail');
+    out+=`<div class="nd${k===0?' today':''}"><b>${k===0?'Aujourd\'hui':key}</b>${r.querySelector('.day-title').innerHTML}${dt?'<small>'+dt.innerHTML+'</small>':''}</div>`;
+  }
+  document.getElementById('next-days').innerHTML=out||'<div class="nd">Plus de séance prévue au planning.</div>';
+  // todo
+  const items=['Commande TA passée / gels reçus','Courses de la semaine de taper','Répétition générale ven 20 (tenue + gel + montre)','Montre : GPX importé, ClimbPro, alarme FC 132','Sac de course prêt (matériel obligatoire)','Retrait dossard ven 27 (12h → 19h)','Montre + frontale chargées à 100 % la veille'];
+  let st={}; try{st=JSON.parse(localStorage.getItem('sl_todo')||'{}')}catch(e){}
+  const box=document.getElementById('todo');
+  box.innerHTML=items.map((t,i)=>`<label class="todo-item${st[i]?' done':''}"><input type="checkbox" data-i="${i}"${st[i]?' checked':''}><span>${t}</span></label>`).join('');
+  box.querySelectorAll('input').forEach(c=>c.onchange=()=>{st[c.dataset.i]=c.checked;c.parentNode.classList.toggle('done',c.checked);try{localStorage.setItem('sl_todo',JSON.stringify(st))}catch(e){}});
+  show('accueil');
+}
+
+// ═══════════════ CHECKLIST ═══════════════
+function toggle(el) {
+  el.classList.toggle('checked');
+  updateCheckProgress();
+  saveChecklist();
+}
+function updateCheckProgress() {
+  const items = document.querySelectorAll('#checklist-container .check-item');
+  const checked = document.querySelectorAll('#checklist-container .check-item.checked');
+  document.getElementById('check-progress').textContent = checked.length + '/' + items.length;
+}
+function saveChecklist() {
+  const states = [];
+  document.querySelectorAll('#checklist-container .check-item').forEach(el => states.push(el.classList.contains('checked')));
+  try { localStorage.setItem('sl_checklist', JSON.stringify(states)); showSaved('check-saved'); } catch(e) {}
+}
+function loadChecklist() {
+  try {
+    const states = JSON.parse(localStorage.getItem('sl_checklist') || '[]');
+    const items = document.querySelectorAll('#checklist-container .check-item');
+    items.forEach((el, i) => { if (states[i]) el.classList.add('checked'); });
+  } catch(e) {}
+  updateCheckProgress();
+}
+
+// ═══════════════ ACHATS ═══════════════
+function toggleAchat(el) {
+  el.classList.toggle('bought');
+  updateAchatProgress();
+  saveAchats();
+}
+function updateAchatProgress() {
+  const items = document.querySelectorAll('.achat-item');
+  const bought = document.querySelectorAll('.achat-item.bought');
+  document.getElementById('achat-progress').textContent = bought.length + '/' + items.length + ' achetés';
+}
+function saveAchats() {
+  const states = [];
+  document.querySelectorAll('.achat-item').forEach(el => states.push(el.classList.contains('bought')));
+  try { localStorage.setItem('sl_achats', JSON.stringify(states)); } catch(e) {}
+}
+function loadAchats() {
+  try {
+    const states = JSON.parse(localStorage.getItem('sl_achats') || '[]');
+    const items = document.querySelectorAll('.achat-item');
+    items.forEach((el, i) => { if (states[i]) el.classList.add('bought'); });
+  } catch(e) {}
+  updateAchatProgress();
+}
+
+// ═══════════════ RAVITOS ═══════════════
+function toggleTag(el, ravito) {
+  el.classList.toggle('selected');
+  saveRavitos();
+}
+function saveRavitos() {
+  const data = {
+    r1_persons: document.getElementById('r1-persons')?.value || '',
+    r1_notes: document.getElementById('r1-notes')?.value || '',
+    r3_persons: document.getElementById('r3-persons')?.value || '',
+    r3_notes: document.getElementById('r3-notes')?.value || '',
+    r4_persons: document.getElementById('r4-persons')?.value || '',
+    r4_notes: document.getElementById('r4-notes')?.value || '',
+    r5_persons: document.getElementById('r5-persons')?.value || '',
+    r5_notes: document.getElementById('r5-notes')?.value || '',
+    dossard: document.getElementById('dossard')?.value || '',
+    emergency: document.getElementById('emergency')?.value || '',
+    depart: document.getElementById('depart-time')?.value || '23:30',
+  };
+  const tags = {};
+  document.querySelectorAll('.ravito-item-tag').forEach((el, i) => tags[i] = el.classList.contains('selected'));
+  data.tags = tags;
+  try { localStorage.setItem('sl_ravitos', JSON.stringify(data)); showSaved('tracker-saved'); } catch(e) {}
+}
+function loadRavitos() {
+  try {
+    const data = JSON.parse(localStorage.getItem('sl_ravitos') || '{}');
+    if (data.r1_persons) document.getElementById('r1-persons').value = data.r1_persons;
+    if (data.r1_notes) document.getElementById('r1-notes').value = data.r1_notes;
+    if (data.r3_persons) document.getElementById('r3-persons').value = data.r3_persons;
+    if (data.r3_notes) document.getElementById('r3-notes').value = data.r3_notes;
+    if (data.r4_persons) document.getElementById('r4-persons').value = data.r4_persons;
+    if (data.r4_notes) document.getElementById('r4-notes').value = data.r4_notes;
+    if (data.r5_persons) document.getElementById('r5-persons').value = data.r5_persons;
+    if (data.r5_notes) document.getElementById('r5-notes').value = data.r5_notes;
+    if (data.dossard) document.getElementById('dossard').value = data.dossard;
+    if (data.emergency) document.getElementById('emergency').value = data.emergency;
+    if (data.depart) document.getElementById('depart-time').value = data.depart;
+    if (data.tags) {
+      document.querySelectorAll('.ravito-item-tag').forEach((el, i) => {
+        if (data.tags[i] && !el.classList.contains('selected')) el.classList.add('selected');
+        else if (!data.tags[i] && el.classList.contains('selected') && el.getAttribute('onclick')) {} // keep pre-selected
+      });
+    }
+  } catch(e) {}
+}
+
+// ═══════════════ TRACKER ═══════════════
+const CHECKPOINTS = [
+  { km: 0, name: 'Départ Saint-Étienne', barrier: '23:30', type: 'start' },
+  { km: 17.3, name: 'Saint-Christo-en-Jarez', barrier: '04:00', type: 'ravito' },
+  { km: 32.7, name: 'Sainte-Catherine ⭐', barrier: '07:00', type: 'ravito' },
+  { km: 42.3, name: 'Le Signal ★ (925 m)', barrier: '—', type: 'point' },
+  { km: 46, name: 'Le Camp – Saint-Genou', barrier: '09:30', type: 'ravito' },
+  { km: 60.2, name: 'Soucieu-en-Jarrest', barrier: '12:00', type: 'ravito' },
+  { km: 66.3, name: 'Chaponost', barrier: '13:30', type: 'ravito' },
+  { km: 80.6, name: '🏁 Lyon — Halle Tony Garnier', barrier: '16:30', type: 'finish' },
+];
+
+let passedTimes = {};
+
+function buildTracker() {
+  const container = document.getElementById('tracker-points');
+  container.innerHTML = '';
+  CHECKPOINTS.forEach((cp, i) => {
+    const div = document.createElement('div');
+    div.className = 'tracker-point' + (passedTimes[i] ? ' passed' : '');
+    div.id = 'tp-' + i;
+    div.innerHTML = `
+      <div class="tracker-dot"></div>
+      <div class="tracker-km">Km ${cp.km}</div>
+      <div class="tracker-name">${cp.name}</div>
+      <div style="text-align:right">
+        <div class="tracker-barrier">🚧 ${cp.barrier}</div>
+        ${passedTimes[i] ? `<div class="tracker-time ok">✅ ${passedTimes[i]}</div>` : 
+          `<input type="time" style="background:var(--night-2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;color:var(--text);font-size:11px;outline:none;width:80px" onchange="markPassed(${i}, this.value)">`}
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function markPassed(idx, time) {
+  passedTimes[idx] = time;
+  buildTracker();
+  updatePredictions();
+  savePassed();
+}
+
+function updatePredictions() {
+  const departTime = document.getElementById('depart-time')?.value || '23:30';
+  const lastPassed = Object.keys(passedTimes).map(Number).sort((a,b) => b-a)[0];
+  if (lastPassed === undefined) { document.getElementById('predicted-arrival').style.display = 'none'; return; }
+  
+  const [dh, dm] = departTime.split(':').map(Number);
+  const departMins = dh * 60 + dm;
+  const [lh, lm] = passedTimes[lastPassed].split(':').map(Number);
+  let lastMins = lh * 60 + lm;
+  if (lastMins < departMins) lastMins += 24 * 60;
+  
+  const elapsedMins = lastMins - departMins;
+  const kmDone = CHECKPOINTS[lastPassed].km;
+  if (kmDone === 0) { document.getElementById('predicted-arrival').style.display = 'none'; return; }
+  
+  const pace = elapsedMins / kmDone;
+  const totalMins = pace * 80.6;
+  const arrivalMins = (departMins + totalMins) % (24 * 60);
+  const ah = Math.floor(arrivalMins / 60);
+  const am = Math.floor(arrivalMins % 60);
+  const totalH = Math.floor(totalMins / 60);
+  const totalM = Math.floor(totalMins % 60);
+  
+  document.getElementById('predicted-arrival').style.display = 'block';
+  document.getElementById('arrival-time').textContent = String(ah).padStart(2,'0') + 'h' + String(am).padStart(2,'0');
+  document.getElementById('arrival-total').textContent = `Temps total estimé : ${totalH}h${String(totalM).padStart(2,'0')}`;
+}
+
+function resetTracker() {
+  passedTimes = {};
+  buildTracker();
+  document.getElementById('predicted-arrival').style.display = 'none';
+  try { localStorage.removeItem('sl_tracker'); } catch(e) {}
+}
+
+function savePassed() {
+  try { localStorage.setItem('sl_tracker', JSON.stringify(passedTimes)); } catch(e) {}
+}
+
+function loadTracker() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('sl_tracker') || '{}');
+    Object.keys(saved).forEach(k => passedTimes[parseInt(k)] = saved[k]);
+  } catch(e) {}
+  buildTracker();
+}
+
+// ═══════════════ SAVE INDICATOR ═══════════════
+function showSaved(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1500);
+}
+
+// ═══════════════ INIT ═══════════════
+const PROFILE = [[0.0, 495], [0.4, 496], [0.8, 495], [1.2, 493], [1.6, 492], [2.0, 501], [2.4, 507], [2.8, 512], [3.2, 515], [3.6, 532], [4.0, 551], [4.4, 573], [4.8, 595], [5.2, 624], [5.6, 622], [6.0, 613], [6.4, 594], [6.8, 585], [7.2, 563], [7.6, 527], [8.0, 511], [8.4, 517], [8.8, 521], [9.2, 476], [9.6, 482], [10.0, 496], [10.4, 543], [10.8, 588], [11.2, 618], [11.6, 650], [12.0, 691], [12.4, 707], [12.8, 727], [13.2, 735], [13.6, 775], [14.0, 784], [14.4, 760], [14.8, 750], [15.2, 732], [15.6, 736], [16.0, 757], [16.4, 737], [16.8, 742], [17.2, 771], [17.6, 763], [18.0, 763], [18.4, 778], [18.8, 832], [19.2, 834], [19.6, 804], [20.0, 725], [20.4, 753], [20.8, 764], [21.2, 807], [21.6, 852], [22.0, 869], [22.4, 865], [22.8, 878], [23.2, 877], [23.6, 871], [24.0, 870], [24.4, 861], [24.8, 816], [25.2, 755], [25.6, 723], [26.0, 689], [26.4, 704], [26.8, 697], [27.2, 699], [27.6, 752], [28.0, 779], [28.4, 756], [28.8, 749], [29.2, 789], [29.6, 815], [30.0, 799], [30.4, 748], [30.8, 726], [31.2, 735], [31.6, 714], [32.0, 693], [32.4, 694], [32.8, 690], [33.2, 685], [33.6, 715], [34.0, 748], [34.4, 766], [34.8, 780], [35.2, 804], [35.6, 816], [36.0, 776], [36.4, 749], [36.8, 783], [37.2, 817], [37.6, 843], [38.0, 803], [38.4, 761], [38.8, 753], [39.2, 754], [39.6, 763], [40.0, 791], [40.4, 836], [40.8, 864], [41.2, 894], [41.6, 880], [42.0, 918], [42.4, 911], [42.8, 858], [43.2, 847], [43.6, 802], [44.0, 753], [44.4, 700], [44.8, 639], [45.2, 634], [45.6, 626], [46.0, 611], [46.4, 576], [46.8, 627], [47.2, 622], [47.6, 593], [48.0, 521], [48.4, 528], [48.8, 550], [49.2, 541], [49.6, 552], [50.0, 533], [50.4, 488], [50.8, 426], [51.2, 427], [51.6, 480], [52.0, 514], [52.4, 536], [52.8, 525], [53.2, 529], [53.6, 531], [54.0, 510], [54.4, 471], [54.8, 465], [55.2, 475], [55.6, 470], [56.0, 439], [56.4, 418], [56.8, 405], [57.2, 436], [57.6, 424], [58.0, 406], [58.4, 391], [58.8, 380], [59.2, 377], [59.6, 375], [60.0, 366], [60.4, 367], [60.8, 360], [61.2, 351], [61.6, 344], [62.0, 330], [62.4, 312], [62.8, 300], [63.2, 291], [63.6, 260], [64.0, 234], [64.4, 273], [64.8, 294], [65.2, 305], [65.6, 308], [66.0, 308], [66.4, 310], [66.8, 310], [67.2, 308], [67.6, 307], [68.0, 314], [68.4, 310], [68.8, 294], [69.2, 280], [69.6, 272], [70.0, 272], [70.4, 302], [70.8, 314], [71.2, 318], [71.6, 290], [72.0, 237], [72.4, 242], [72.8, 248], [73.2, 240], [73.6, 226], [74.0, 205], [74.4, 185], [74.8, 215], [75.2, 256], [75.6, 272], [76.0, 235], [76.4, 238], [76.8, 251], [77.2, 233], [77.6, 237], [78.0, 242], [78.4, 196], [78.8, 176], [79.2, 166], [79.6, 166], [80.0, 166], [80.4, 167], [80.6, 171]];
+const MARKS = [{"km": 17.3, "n": "1", "c": "#f59e0b"}, {"km": 32.7, "n": "2", "c": "#f59e0b"}, {"km": 42.3, "n": "\u2605", "c": "#ef4444"}, {"km": 46.0, "n": "3", "c": "#f59e0b"}, {"km": 60.2, "n": "4", "c": "#f59e0b"}, {"km": 66.3, "n": "5", "c": "#f59e0b"}];
+const SCEN = {"ambitieux": {"label": "Ambitieux · 10h00", "rows": [["Départ Saint-Étienne", "0", "0h00", "23h30", "—"], ["Saint-Christo-en-Jarez", "17,3", "2h04", "01h34", "7'10\""], ["Sainte-Catherine", "32,7", "3h59", "03h29", "7'17\""], ["Le Signal ★", "42,3", "5h23", "04h53", "8'14\""], ["Le Camp", "46,0", "5h45", "05h15", "5'58\""], ["Soucieu-en-Jarrest", "60,2", "7h29", "06h59", "7'12\""], ["Chaponost", "66,3", "8h15", "07h45", "6'52\""], ["Arrivée Lyon", "80,6", "10h00", "09h30", "7'13\""]], "note": "Possible seulement si aucune baisse de forme et une grosse 2e moitié. Demande ~7'10\"/km tenus sur les 33 premiers km : à ne PAS tenter au départ."}, "cible": {"label": "Cible · 10h45", "rows": [["Départ Saint-Étienne", "0", "0h00", "23h30", "—"], ["Saint-Christo-en-Jarez", "17,3", "2h13", "01h43", "7'43\""], ["Sainte-Catherine", "32,7", "4h17", "03h47", "7'51\""], ["Le Signal ★", "42,3", "5h47", "05h17", "8'52\""], ["Le Camp", "46,0", "6h11", "05h41", "6'25\""], ["Soucieu-en-Jarrest", "60,2", "8h03", "07h33", "7'46\""], ["Chaponost", "66,3", "8h52", "08h22", "7'24\""], ["Arrivée Lyon", "80,6", "10h45", "10h15", "7'46\""]], "note": "Scénario de référence : repose sur ton allure réelle d'entraînement (7'54\"/km à 35 m D+/km) avec ~12% de baisse de rythme sur 80 km."}, "prudent": {"label": "Prudent · 11h30", "rows": [["Départ Saint-Étienne", "0", "0h00", "23h30", "—"], ["Saint-Christo-en-Jarez", "17,3", "2h23", "01h53", "8'17\""], ["Sainte-Catherine", "32,7", "4h35", "04h05", "8'24\""], ["Le Signal ★", "42,3", "6h11", "05h41", "9'30\""], ["Le Camp", "46,0", "6h37", "06h07", "6'53\""], ["Soucieu-en-Jarrest", "60,2", "8h37", "08h07", "8'19\""], ["Chaponost", "66,3", "9h29", "08h59", "7'56\""], ["Arrivée Lyon", "80,6", "11h30", "11h00", "8'19\""]], "note": "Si la nuit est froide/boueuse ou si l'estomac coince : tu finis largement dans les temps (barrière 16h)."}};
+function drawProfile(id) {
+  var el = document.getElementById(id); if (!el) return;
+  var W = 360, H = 190, pl = 30, pr = 6, pt = 12, pb = 24, minE = 100, maxE = 1000, TOT = 80.6;
+  function X(k) { return pl + (k / TOT) * (W - pl - pr); }
+  function Y(e) { return pt + (1 - (e - minE) / (maxE - minE)) * (H - pt - pb); }
+  var line = '';
+  PROFILE.forEach(function (p, i) { line += (i ? ' L' : 'M') + X(p[0]).toFixed(1) + ',' + Y(p[1]).toFixed(1); });
+  var area = line + ' L' + X(TOT).toFixed(1) + ',' + (H - pb) + ' L' + X(0).toFixed(1) + ',' + (H - pb) + ' Z';
+  var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:auto;display:block" xmlns="http://www.w3.org/2000/svg">';
+  s += '<defs><linearGradient id="pg' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.55"/><stop offset="100%" stop-color="#3b82f6" stop-opacity="0.04"/></linearGradient></defs>';
+  [200, 400, 600, 800].forEach(function (e) {
+    s += '<line x1="' + pl + '" y1="' + Y(e) + '" x2="' + (W - pr) + '" y2="' + Y(e) + '" stroke="rgba(255,255,255,0.08)"/>';
+    s += '<text x="' + (pl - 4) + '" y="' + (Y(e) + 3) + '" fill="#94a3b8" font-size="9" text-anchor="end">' + e + '</text>';
+  });
+  s += '<path d="' + area + '" fill="url(#pg' + id + ')"/><path d="' + line + '" fill="none" stroke="#3b82f6" stroke-width="1.6"/>';
+  MARKS.forEach(function (m) {
+    var x = X(m.km);
+    s += '<line x1="' + x + '" y1="' + pt + '" x2="' + x + '" y2="' + (H - pb) + '" stroke="' + m.c + '" stroke-dasharray="3,3" stroke-opacity="0.7"/>';
+    s += '<circle cx="' + x + '" cy="' + pt + '" r="6.5" fill="' + m.c + '"/>';
+    s += '<text x="' + x + '" y="' + (pt + 3) + '" fill="#0a0e1a" font-size="9" font-weight="700" text-anchor="middle">' + m.n + '</text>';
+  });
+  for (var k = 0; k <= 80; k += 10) {
+    s += '<text x="' + X(k) + '" y="' + (H - 8) + '" fill="#94a3b8" font-size="9" text-anchor="middle">' + k + '</text>';
+  }
+  s += '<text x="' + (W - pr) + '" y="' + (H - 8) + '" fill="#94a3b8" font-size="9" text-anchor="end">km</text></svg>';
+  el.innerHTML = s;
+}
+function showScen(key, btn) {
+  document.querySelectorAll('.scen-btn').forEach(function (b) { b.classList.remove('active'); });
+  var b0 = btn || document.querySelector('.scen-btn[data-k="' + key + '"]');
+  if (b0) b0.classList.add('active');
+  var S = SCEN[key];
+  var h = '<table class="table"><thead><tr><th>Point</th><th>Km</th><th>Temps</th><th>Heure</th><th>Allure</th></tr></thead><tbody>';
+  S.rows.forEach(function (r) {
+    h += '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td><strong>' + r[2] + '</strong></td><td>' + r[3] + '</td><td style="color:var(--text-dim)">' + r[4] + '</td></tr>';
+  });
+  h += '</tbody></table><div style="font-size:12px;color:var(--text-dim);margin-top:8px">' + S.note + '</div>';
+  document.getElementById('scen-table').innerHTML = h;
+}
+
+function toggleShop(el) { el.classList.toggle('checked'); saveShop(); }
+function saveShop() { var s = []; document.querySelectorAll('.shop-item').forEach(function (e) { s.push(e.classList.contains('checked')); }); try { localStorage.setItem('sl_shop', JSON.stringify(s)); } catch (e) {} }
+function loadShop() { try { var s = JSON.parse(localStorage.getItem('sl_shop') || '[]'); document.querySelectorAll('.shop-item').forEach(function (e, i) { if (s[i]) e.classList.add('checked'); }); } catch (e) {} }
+
+window.addEventListener('load', () => {
+  loadChecklist();
+  loadAchats();
+  loadRavitos();
+  loadTracker();
+  
+  drawProfile('profile-parcours');
+  initUI();
+  showScen('cible');
+  loadShop();
+});
+</script>
+<script>if('serviceWorker' in navigator && location.protocol.startsWith('http')){navigator.serviceWorker.register('sw.js').catch(function(){});}</script>
+</body>
+</html>
