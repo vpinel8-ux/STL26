@@ -255,6 +255,9 @@ body{font-size:16px;line-height:1.55}
 .todo-item,.nd{font-size:15px}.nd small{font-size:14px}
 .quick button{font-size:15px;padding:14px}
 .card.collapsible>.card-title{flex-wrap:nowrap}.card.collapsible>.card-title::after{flex:0 0 auto}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#ef4444;margin-left:7px;vertical-align:middle;box-shadow:0 0 0 3px rgba(239,68,68,.28)}
+.tabbar button{position:relative}.tabbar button .dot{position:absolute;top:7px;left:calc(50% + 10px);margin:0}
+.upd{margin-bottom:14px;font-size:14px}
 </style>
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a0e1a"></head>
 <body>
@@ -275,6 +278,7 @@ body{font-size:16px;line-height:1.55}
 <div class="tabbar" id="tabbar"></div>
 
 <section id="accueil" class="section active">
+  <div class="card"><div class="card-title">🆕 Mises à jour</div><div id="upd-list"></div></div>
   <div class="card"><div class="card-title">🗓️ Prochains jours</div><div id="next-days"></div></div>
   <div class="card"><div class="card-title">✅ À faire avant le 28</div><div id="todo"></div></div>
   <div class="card"><div class="card-title">🎯 Course en un coup d'œil</div>
@@ -1128,17 +1132,42 @@ const GROUPS=[
  {k:'nutri',i:'🍯',t:'Nutrition',s:[['nutrition','Plan'],['hydratation','Boire']]},
  {k:'matos',i:'🎒',t:'Matos',s:[['materiel','Matériel'],['montre','Montre'],['infos','Infos orga']]}
 ];
+const UPDATES=[
+ {id:'planning',k:'2026-11-16a',d:'16 nov',t:'Semaine du 16 au 22 : hockey mardi et jeudi, répétition générale vendredi'},
+ {id:'nutrition',k:'2026-11-16b',d:'16 nov',t:'Plan 60 g/h : gel puis gommes toutes les 40 min, isotonique rechargée à chaque ravito'},
+ {id:'hydratation',k:'2026-11-16c',d:'16 nov',t:'Flasques : isotonique vide à chaque ravito, pastilles en secours seulement'},
+ {id:'achats',k:'2026-11-16d',d:'16 nov',t:'Quantités : 8 gels TA, 4 caféinés, 10 sachets de gommes, 8 d\'isotonique'},
+ {id:'materiel',k:'2026-11-16e',d:'16 nov',t:'Checklist : 6 sachets d\'isotonique'}
+];
+const LABEL={planning:'Planning',nutrition:'Nutrition · Plan',hydratation:'Nutrition · Boire',achats:'Achats',materiel:'Matériel',repas:'Repas',strategie:'Stratégie',parcours:'Parcours',ravitos:'Ravitos',infos:'Infos orga',montre:'Montre',zones:'Zones FC',objectif:'Objectif',meteo:'Météo'};
+function seenMap(){try{return JSON.parse(localStorage.getItem('sl_seen')||'{}')}catch(e){return {}}}
+function lastUpd(id){const l=UPDATES.filter(u=>u.id===id);return l.length?l[l.length-1]:null}
+function isNew(id){const u=lastUpd(id);return !!u&&seenMap()[id]!==u.k}
+function markSeen(id){const u=lastUpd(id);if(!u)return;const s=seenMap();s[id]=u.k;try{localStorage.setItem('sl_seen',JSON.stringify(s))}catch(e){}}
+const DOT='<i class="dot"></i>';
+function refreshUpd(){
+  document.querySelectorAll('#tabbar button').forEach(b=>{
+    const g=GROUPS.find(g=>g.k===b.dataset.k);
+    const d=b.querySelector('.dot'); const n=g.s.some(x=>isNew(x[0]));
+    if(n&&!d)b.insertAdjacentHTML('beforeend',DOT); if(!n&&d)d.remove();
+  });
+  const box=document.getElementById('upd-list'); if(!box)return;
+  box.innerHTML=UPDATES.slice().reverse().map(u=>`<div class="nd" style="cursor:pointer" onclick="show('${u.id}')"><b style="min-width:0">${LABEL[u.id]||u.id}${isNew(u.id)?DOT:''}</b><small style="margin-left:0">${u.d} · ${u.t}</small></div>`).join('');
+}
 function show(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const g=GROUPS.find(g=>g.s.some(x=>x[0]===id));
   document.querySelectorAll('#tabbar button').forEach(b=>b.classList.toggle('active',b.dataset.k===g.k));
   const sn=document.getElementById('subnav');
-  sn.innerHTML=g.s.length>1?g.s.map(x=>`<button class="nav-btn${x[0]===id?' active':''}" onclick="show('${x[0]}')">${x[1]}</button>`).join(''):'';
+  sn.innerHTML=g.s.length>1?g.s.map(x=>`<button class="nav-btn${x[0]===id?' active':''}" onclick="show('${x[0]}')">${x[1]}${isNew(x[0])&&x[0]!==id?DOT:''}</button>`).join(''):'';
+  if(id!=='accueil')markSeen(id);
+  refreshUpd();
   window.scrollTo(0,0);
 }
 function initUI(){
   document.getElementById('tabbar').innerHTML=GROUPS.map(g=>`<button data-k="${g.k}" onclick="show('${g.s[0][0]}')"><span>${g.i}</span>${g.t}</button>`).join('');
+  UPDATES.forEach(u=>{const sec=document.getElementById(u.id); if(!sec||lastUpd(u.id)!==u||sec.querySelector('.upd'))return; sec.insertAdjacentHTML('afterbegin',`<div class="alert alert-success upd">🆕 Mis à jour le ${u.d} : ${u.t}</div>`);});
   document.querySelectorAll('.section').forEach(sec=>{
     if(sec.id==='accueil')return;
     [...sec.children].filter(c=>c.classList.contains('card')).forEach((c,i)=>{
