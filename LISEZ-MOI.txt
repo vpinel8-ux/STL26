@@ -1,0 +1,12 @@
+MISE EN PLACE (une seule fois, ~10 minutes)
+1. github.com : crée un compte puis un dépôt PUBLIC nommé "saintelyon" (public = obligatoire pour le site gratuit).
+2. Sur ordinateur, envoie dans ce dépôt TOUT le contenu du zip (y compris le dossier caché .github).
+3. Dépôt > Settings > Pages > "Build and deployment" > Source : choisis "GitHub Actions".
+4. Onglet Actions : attends que "Site" et "Build APK" soient verts (2 à 5 min). Si "Site" a échoué avant l'étape 3, clique "Re-run".
+5. Build APK > en bas "Saintelyon-2026-apk" : télécharge, dézippe, installe app-debug.apk sur ton Android.
+6. Ouvre l'appli une fois AVEC du réseau (Wi-Fi) : elle se garde en mémoire. Ensuite elle marche sans réseau.
+
+MISES À JOUR
+Le site (dossier web/) se met à jour tout seul à chaque changement dans le dépôt.
+L'appli récupère la nouvelle version à l'ouverture suivante avec du réseau. Pas de réinstallation.
+Pour que Claude puisse modifier le dépôt à ta place : claude.ai > Paramètres > connecte GitHub.
