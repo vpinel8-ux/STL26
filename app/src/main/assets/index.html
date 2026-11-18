@@ -762,12 +762,12 @@ body{font-size:16px;line-height:1.55}
       <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Bonnet ou bandeau oreilles (de course)</div></div>
 
       <div class="check-category">💊 Nutrition</div>
-      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">8 gels TA Jelly</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">5 gels TA Jelly pour la course (+ 3 de test)</div></div>
       <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">3 gels caféinés ☕</div></div>
       <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">1 gel secours</div></div>
       <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">6 sachets isotonique TA (5 + 1 de marge)</div></div>
-      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">6 pastilles électrolytes TA</div></div>
-      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">6 sachets gommes TA</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">3 pastilles électrolytes TA (secours seulement)</div></div>
+      <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">8 sachets gommes TA (1 sachet = 3 gommes), sans caféine (+ 2 de test)</div></div>
       <div class="check-item" onclick="toggle(this)"><div class="check-box"></div><div class="check-text">Réserve alimentaire de secours (obligatoire) : gels, gommes, barres</div></div>
 
       <div class="check-category">🩹 Confort & Sécurité</div>
@@ -1084,6 +1084,10 @@ body{font-size:16px;line-height:1.55}
 <section id="meteo" class="section">
 
   <div class="card">
+    <div class="card-title">🧥 Ma tenue pour la nuit <span class="badge badge-gold">hypothèse 0 à 6 °C, humide</span></div>
+    <div class="alert alert-warning" style="margin-bottom:12px">Prévision pas encore fiable : la course est dans 10 jours et les prévisions fiables s'arrêtent vers le 25 nov. La semaine du 22 se refroidit (nuits vers 2-3 °C à Lyon). On refait le point le <b>mer. 25</b> (J-3) et le <b>ven. 27</b> (J-1). Au sommet du Signal (925 m), compte ~5 °C de moins qu'à Saint-Étienne.</div><div class="stat-row"><div class="stat-label">Sur toi au départ</div><div class="stat-value" style="font-size:12px">Collant long, chaussettes trail, T-shirt manches longues technique, coupe-vent léger, bonnet ou bandeau, gants légers. Tu dois avoir un peu frais au départ : tu te réchauffes en 10 min.</div></div><div class="stat-row"><div class="stat-label">Dans le sac</div><div class="stat-value" style="font-size:12px">Veste imperméable à capuche (obligatoire), 2e couche chaude, gants chauds imperméables, bonnet chaud, couverture de survie, surpantalon imperméable si le kit grand froid est activé.</div></div><div class="stat-row"><div class="stat-label">Montées</div><div class="stat-value" style="font-size:12px">Ouvre le coupe-vent, enlève les gants. Évite de transpirer : ce qui est mouillé gèle dans la descente.</div></div><div class="stat-row"><div class="stat-label">Descentes et arrêts</div><div class="stat-value" style="font-size:12px">Couche chaude et gants AVANT de t'arrêter ou de plonger dans la descente, pas après. Le vent et le froid s'ajoutent à la fatigue.</div></div><div class="stat-row"><div class="stat-label">Si pluie ou neige fondue</div><div class="stat-value" style="font-size:12px">Veste imperméable dès les premières gouttes, gants chauds imperméables, chaussettes de rechange au sac si tu en as la place.</div></div><div class="stat-row"><div class="stat-label">Si gel ou verglas</div><div class="stat-value" style="font-size:12px">Kit grand froid complet. Pense à bien resserrer les lacets, et ralentis dans les descentes.</div></div><div class="stat-row"><div class="stat-label">À l'arrivée</div><div class="stat-value" style="font-size:12px">Couche sèche dans le sac de drop : tu refroidis très vite en t'arrêtant, même à Lyon.</div></div><div class="stat-row"><div class="stat-label">Décision</div><div class="stat-value" style="font-size:12px">Le kit grand froid (activé ou non par l'organisation) se confirme la veille. Prépare-le quoi qu'il arrive.</div></div>
+  </div>
+<div class="card">
     <div class="card-title">🌦️ Météo J-1 & Jour J</div>
     <div class="alert alert-warning">⚠️ Fin novembre dans les Monts du Lyonnais — tout est possible. Prépare le kit grand froid même si la météo semble clémente.</div>
     <div style="margin-top:12px">
@@ -1171,6 +1175,8 @@ const UPDATES=[
  {id:'strategie',k:'2026-11-18c',d:'18 nov',t:'Nouveau : consignes pour la grande descente (km 42-60)'},
  {id:'planning',k:'2026-11-18c',d:'18 nov',t:'Nouveau : plan sommeil du 24 au 28 nov'},
  {id:'strategie',k:'2026-11-18d',d:'18 nov',t:'Nouveau : plans B (nausée, froid, genou, coup de mou, crampes…)'},
+ {id:'meteo',k:'2026-11-18e',d:'18 nov',t:'Nouveau : tenue de la nuit (0-6 °C) et rendez-vous météo J-3 / J-1'},
+ {id:'materiel',k:'2026-11-18f',d:'18 nov',t:'Checklist alignée sur le plan nutrition (gels, gommes, pastilles)'},
  {id:'repas',k:'2026-11-17g',d:'17 nov',t:'Jour J : repas du soir décalés pour un départ à 00h00'}
 ];
 const LABEL={planning:'Planning',nutrition:'Nutrition · Plan',hydratation:'Nutrition · Boire',achats:'Achats',materiel:'Matériel',repas:'Repas',strategie:'Stratégie',parcours:'Parcours',ravitos:'Ravitos',infos:'Infos orga',montre:'Montre',zones:'Zones FC',objectif:'Objectif',meteo:'Météo'};
@@ -1225,7 +1231,7 @@ function initUI(){
   }
   document.getElementById('next-days').innerHTML=out||'<div class="nd">Plus de séance prévue au planning.</div>';
   // todo
-  const items=['Commande TA passée / gels reçus','Courses de la semaine de taper','Répétition générale ven 20 (tenue + gel + montre)','Montre : GPX importé, ClimbPro, alarme FC 132','Sac de course prêt (matériel obligatoire)','Retrait dossard ven 27 (12h → 19h)','Montre + frontale chargées à 100 % la veille'];
+  const items=['Commande TA passée / gels reçus','Courses de la semaine de taper','Répétition générale ven 20 (tenue + gel + montre)','Montre : GPX importé, ClimbPro, alarme FC 132','Sac de course prêt (matériel obligatoire)','Retrait dossard ven 27 (12h → 19h)','Montre + frontale chargées à 100 % la veille','Météo : ajuster la tenue le mer. 25 et le ven. 27'];
   let st={}; try{st=JSON.parse(localStorage.getItem('sl_todo')||'{}')}catch(e){}
   const box=document.getElementById('todo');
   box.innerHTML=items.map((t,i)=>`<label class="todo-item${st[i]?' done':''}"><input type="checkbox" data-i="${i}"${st[i]?' checked':''}><span>${t}</span></label>`).join('');
