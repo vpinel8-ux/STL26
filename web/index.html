@@ -350,6 +350,11 @@ details.card[open]>summary{margin-bottom:10px}
 #mc details{margin-top:10px}#mc summary{cursor:pointer}
 #mc input[type=range]{width:100%;margin:8px 0}
 .tile.mc{background:linear-gradient(135deg,#e8590c,#f08c00)}
+
+.mc-startc{background:#1d3b8f}
+.mc-go{background:#22c55e;color:#04210e;font-size:26px;padding:22px}
+.mc-go.arm{background:#f59e0b;color:#2a1800}
+.mc-fin{background:#0f5c3a}
 </style>
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a0e1a"></head>
 <body>
@@ -367,13 +372,16 @@ details.card[open]>summary{margin-bottom:10px}
 
 <div id="head"><div class="topbar"><div class="tt" id="tb-title"></div><div class="tj" id="tb-j"></div><button class="sb" onclick="openSearch()" aria-label="Chercher">🔍</button></div><nav class="nav" id="subnav"></nav></div>
 <div class="tabbar" id="tabbar"></div>
-<div id="mc"><div class="mc-top"><div><div class="mc-clock" id="mc-clock">--:--</div><div class="mc-since" id="mc-since"></div></div><button onclick="closeMC()">Quitter</button></div>
+<div id="mc"><div class="mc-top"><div><div class="mc-clock" id="mc-clock">--</div><div class="mc-since" id="mc-since"></div></div><button onclick="closeMC()">Quitter</button></div>
 <div id="mc-warn"></div>
+<div id="mc-start"></div>
 <div class="mc-card mc-eat" id="mc-eat"></div>
 <div class="mc-card mc-next" id="mc-next"></div>
-<div class="mc-foot"><div id="mc-gap"></div><div class="mc-adj"><button onclick="mcAdj(-5)">Plan −5 min</button><button onclick="mcAdj(5)">Plan +5 min</button></div>
+<div class="mc-foot"><div id="mc-gap"></div>
+<div class="mc-adj"><button onclick="mcAdj(-5)">Plan −5 min</button><button onclick="mcAdj(5)">Plan +5 min</button></div>
+<div class="mc-adj" id="mc-adjs"><button onclick="mcStartAdj(-1)">Départ −1 min</button><button onclick="mcStartAdj(1)">Départ +1 min</button></div>
 <div>FC &gt; 135 en montée : tu marches · Urgence course 09 72 45 60 02</div>
-<details><summary>Simulation (pour tester)</summary><label><input type="checkbox" id="mc-simon" onchange="mcRender()"> Simuler l'heure</label><input type="range" id="mc-sim" min="-60" max="700" value="0" oninput="mcRender()"><div id="mc-simt"></div><button class="mc-btn" style="font-size:16px;padding:12px" onclick="mcReset()">Réinitialiser le suivi</button></details></div></div>
+<details><summary>Simulation et réinitialisation</summary><label><input type="checkbox" id="mc-simon" onchange="mcRender()"> Simuler (minutes depuis le départ)</label><input type="range" id="mc-sim" min="0" max="700" value="0" oninput="mcRender()"><div id="mc-simt"></div><button class="mc-btn" style="font-size:16px;padding:12px" onclick="mcReset()">Réinitialiser le suivi</button></details></div></div>
 <div id="srch"><div class="srch-top"><input id="srch-in" type="search" placeholder="Chercher : ravito, gel, tibia, froid…" oninput="doSearch(this.value)" autocomplete="off"><button onclick="closeSearch()">Fermer</button></div><div id="srch-res"></div></div>
 
 
@@ -1464,7 +1472,7 @@ const UPDATES=[
  {id:'planning',k:'2026-11-19a',d:'19 nov',t:'Vendredi : répétition à sec sans courir · match de samedi à décider selon la jambe'},
  {id:'infos',k:'2026-11-20a',d:'20 nov',t:'Proches : assistance interdite, lieux et heures pour t\'encourager'},
  {id:'essentiel',k:'2026-11-21i',d:'21 nov',t:'Nouvelle app : accueil simplifié, Fiche course en une page, recherche'},
- {id:'essentiel',k:'2026-11-21j',d:'21 nov',t:'Nouveau : mode course (prochaine prise, prochain ravito), éléments passés supprimés'},
+ {id:'essentiel',k:'2026-11-21j',d:'21 nov',t:'Mode course : tu appuies sur Départ, tout se cale sur ton vrai départ'},
  {id:'infos',k:'2026-11-21g',d:'21 nov',t:'Jour J : arrivée au Parc Expo vers 21h30, entrée dans le SAS 3 dès 22h45 pour être près de l\'arche'},
  {id:'troncons',k:'2026-11-21h',d:'21 nov',t:'Courir ou marcher dans les montées : règle et tableau par montée'},
  {id:'troncons',k:'2026-11-21d',d:'21 nov',t:'Nouveau : fiche tronçon par tronçon, plan tibia et PacePro'},
@@ -1501,41 +1509,57 @@ function doSearch(q){const box=document.getElementById('srch-res');const n=nz(q.
     return '<div class="srch-r" onclick="goCard('+SIDX.indexOf(x)+')"><i>'+esc(x.lab)+'</i><b>'+esc(x.title||x.lab)+'</b><small>'+sn+'</small></div>';}).join(''):'<div class="srch-hint">Rien trouvé. Essaie un autre mot.</div>';}
 function goCard(i){const x=SIDX[i];closeSearch();show(x.sec);x.el.classList.remove('closed');setTimeout(()=>{x.el.scrollIntoView({behavior:'smooth',block:'start'});x.el.classList.add('flash');setTimeout(()=>x.el.classList.remove('flash'),1700)},80);}
 
-const MC_START=new Date(2026,10,29,0,0,0);
 const MC_P=[[-15,'Gel',''],[25,'Gommes',''],[65,'Gel',''],[105,'Gommes',''],[145,'Gel',''],[185,'Gommes',''],[225,'Gel',''],[265,'Gommes',''],[305,'Gel',''],[345,'Gommes','Au Signal, avant la descente'],[385,'Gel caféiné',''],[425,'Gommes',''],[465,'Gel caféiné',''],[505,'Gommes',''],[545,'Gel caféiné',''],[585,'Gommes','Dernière prise']];
 const MC_R=[[135,'Saint-Christo','km 17','Isotonique neuf dans la flasque, soupe chaude. 3 min.'],[255,'Sainte-Catherine','km 33','Couche chaude avant le Signal, coca ou café, isotonique neuf. 5 min.'],[345,'Le Signal','km 42 · sommet','Gommes avant de plonger. Les 3 premiers km de descente : effort 4/10, pas courts.'],[370,'Le Camp','km 46','Isotonique neuf, soupe, pain. 4 min. Quadris normaux ou en bois ?'],[485,'Soucieu','km 60','Café, range la frontale. Point de décision tibia : douleur au-dessus de 4/10, tu t\'arrêtes ici.'],[530,'Chaponost','km 66','Eau seulement. Relance progressive, FC libre.'],[645,'Lyon','km 80,6 · arrivée','Halle Tony Garnier. Couche sèche tout de suite.']];
-let MC_T=null,MC_WL=null;
-function mcLoad(){try{return Object.assign({d:[],p:-1,shift:0},JSON.parse(localStorage.getItem('sl_mc')||'{}'))}catch(e){return {d:[],p:-1,shift:0}}}
-function mcSave(st){try{localStorage.setItem('sl_mc',JSON.stringify(st))}catch(e){}}
+let MC_T=null,MC_WL=null,MC_ARM=0;
+function mcDef(){return {start:null,d:[],p:-1,shift:0,fin:null}}
+function mcLoad(){try{return Object.assign(mcDef(),JSON.parse(localStorage.getItem('sl_mc2')||'{}'))}catch(e){return mcDef()}}
+function mcSave(st){try{localStorage.setItem('sl_mc2',JSON.stringify(st))}catch(e){}}
 function hhmm(d){return String(d.getHours()).padStart(2,'0')+'h'+String(d.getMinutes()).padStart(2,'0')}
 function dur(m){m=Math.round(m);const a=Math.abs(m);return a>=60?Math.floor(a/60)+' h '+String(a%60).padStart(2,'0'):a+' min'}
-function mcNow(){const on=document.getElementById('mc-simon').checked;if(on){return new Date(MC_START.getTime()+(+document.getElementById('mc-sim').value)*60000)}return new Date()}
+function el(m){m=Math.max(0,Math.floor(m));return Math.floor(m/60)+':'+String(m%60).padStart(2,'0')}
+function mcCtx(){const st=mcLoad();const sim=document.getElementById('mc-simon').checked;const real=new Date();let start=st.start?new Date(st.start):null;let now=real;if(sim){if(!start)start=real;now=new Date(start.getTime()+(+document.getElementById('mc-sim').value)*60000);}return {st:st,sim:sim,start:start,now:now}}
 function openMC(){document.getElementById('mc').style.display='flex';mcRender();clearInterval(MC_T);MC_T=setInterval(mcRender,10000);try{if(navigator.wakeLock)navigator.wakeLock.request('screen').then(w=>{MC_WL=w}).catch(()=>{})}catch(e){}}
 function closeMC(){document.getElementById('mc').style.display='none';clearInterval(MC_T);try{if(MC_WL){MC_WL.release();MC_WL=null}}catch(e){}}
+function mcStart(){if(Date.now()>MC_ARM){MC_ARM=Date.now()+4000;mcRender();return}MC_ARM=0;mcSave({start:Date.now(),d:[0],p:-1,shift:0,fin:null});mcRender()}
+function mcStartAdj(n){const st=mcLoad();if(!st.start)return;st.start+=n*60000;mcSave(st);mcRender()}
 function mcAdj(n){const st=mcLoad();st.shift+=n;mcSave(st);mcRender()}
-function mcReset(){mcSave({d:[],p:-1,shift:0});mcRender()}
-function mcDone(i){const st=mcLoad();if(st.d.indexOf(i)<0)st.d.push(i);mcSave(st);mcRender()}
-function mcPass(i){const st=mcLoad();const now=mcNow();const planned=MC_R[i][0];const actual=(now-MC_START)/60000;st.p=i;st.shift=Math.round(actual-planned);mcSave(st);mcRender()}
+function mcReset(){mcSave(mcDef());MC_ARM=0;mcRender()}
+function mcDone(i){const st=mcLoad();for(let j=0;j<=i;j++){if(st.d.indexOf(j)<0)st.d.push(j)}mcSave(st);mcRender()}
+function mcPass(i){const c=mcCtx();const st=c.st;if(!c.start)return;const sm=(c.now-c.start)/60000;st.p=i;st.shift=Math.round(sm-MC_R[i][0]);if(i===MC_R.length-1)st.fin=sm;mcSave(st);mcRender()}
 function mcRender(){
-  const st=mcLoad();const now=mcNow();const sm=(now-MC_START)/60000;
-  document.getElementById('mc-clock').textContent=hhmm(now);
-  document.getElementById('mc-since').textContent=sm<0?'Départ dans '+dur(-sm):'Course depuis '+dur(sm);
-  const sl=document.getElementById('mc-simt');if(sl)sl.textContent=hhmm(new Date(MC_START.getTime()+(+document.getElementById('mc-sim').value)*60000));
+  const c=mcCtx(),st=c.st,now=c.now,start=c.start,started=!!start;
+  const sm=started?(now-start)/60000:0;
+  const clock=document.getElementById('mc-clock'),since=document.getElementById('mc-since');
+  if(st.fin!==null){clock.textContent=el(st.fin);since.textContent='Temps final';}
+  else if(started){clock.textContent=el(sm);since.textContent='Temps de course · il est '+hhmm(now);}
+  else{clock.textContent=hhmm(now);since.textContent='En attente du départ';}
+  const sl=document.getElementById('mc-simt');if(sl)sl.textContent='Simulation : '+el(+document.getElementById('mc-sim').value)+' de course';
+  document.getElementById('mc-adjs').style.display=started&&!c.sim?'flex':'none';
+  // départ
+  const sc=document.getElementById('mc-start');
+  sc.innerHTML=started?'':'<div class="mc-card mc-startc"><div class="mc-lab">Départ</div><div class="mc-txt">Appuie quand tu franchis la ligne de départ. Tous les temps se calent sur ce moment.</div><button class="mc-btn mc-go'+(Date.now()<MC_ARM?' arm':'')+'" onclick="mcStart()">'+(Date.now()<MC_ARM?'Confirmer le départ ?':'DÉPART')+'</button></div>';
   // prise
-  let ei=MC_P.findIndex((p,i)=>st.d.indexOf(i)<0);const eat=document.getElementById('mc-eat');
-  if(ei<0){eat.className='mc-card mc-eat';eat.innerHTML='<div class="mc-lab">Nutrition</div><div class="mc-big">Terminé</div><div class="mc-txt">Plus de prise prévue. Bois à ta soif et finis fort.</div>';}
-  else{const p=MC_P[ei];const t=new Date(MC_START.getTime()+p[0]*60000);const dm=(t-now)/60000;
-    const cls=dm<-2?'late':(dm<=5?'soon':'');eat.className='mc-card mc-eat '+cls;
-    const nx=MC_P[ei+1];const nt=nx?hhmm(new Date(MC_START.getTime()+nx[0]*60000)):'';
-    eat.innerHTML='<div class="mc-lab">Prochaine prise</div><div class="mc-big">'+p[1]+'</div><div class="mc-mid">'+(dm<=-2?'À prendre maintenant · prévu à '+hhmm(t):'à '+hhmm(t)+' · dans '+dur(dm))+'</div>'+(p[2]?'<div class="mc-txt">'+p[2]+'</div>':'')+'<div class="mc-txt">+ une gorgée d\'isotonique, 250 ml par heure.</div><button class="mc-btn" onclick="mcDone('+ei+')">Fait ✓</button>'+(nx?'<div class="mc-small">Ensuite : '+nx[1]+' à '+nt+'</div>':'');}
+  const eat=document.getElementById('mc-eat');
+  const ei=started?MC_P.findIndex((p,i)=>i>0&&st.d.indexOf(i)<0):(st.d.indexOf(0)<0?0:1);
+  if(st.fin!==null||ei<0){eat.className='mc-card mc-eat';eat.innerHTML='<div class="mc-lab">Nutrition</div><div class="mc-big">Terminé</div><div class="mc-txt">Plus de prise prévue. Bois à ta soif et finis fort.</div>';}
+  else if(!started){const p=MC_P[ei];
+    if(ei===0)eat.innerHTML='<div class="mc-lab">Avant le départ</div><div class="mc-big">Gel 1</div><div class="mc-txt">À prendre dans le sas, environ 15 min avant le départ.</div><button class="mc-btn" onclick="mcDone(0)">Fait ✓</button>';
+    else eat.innerHTML='<div class="mc-lab">Avant le départ</div><div class="mc-big">Gel 1 pris ✓</div><div class="mc-txt">Prochaine prise : gommes, 25 min après le départ.</div>';
+    eat.className='mc-card mc-eat';}
+  else{const p=MC_P[ei];const dm=p[0]-sm;
+    eat.className='mc-card mc-eat '+(dm<-2?'late':(dm<=5?'soon':''));
+    const nx=MC_P[ei+1];
+    eat.innerHTML='<div class="mc-lab">Prochaine prise</div><div class="mc-big">'+p[1]+'</div><div class="mc-mid">'+(dm<=-2?'À prendre maintenant · prévu à '+el(p[0])+' de course':'dans '+dur(dm)+' · à '+el(p[0])+' de course')+'</div>'+(p[2]?'<div class="mc-txt">'+p[2]+'</div>':'')+'<div class="mc-txt">+ une gorgée d\'isotonique, 250 ml par heure.</div><button class="mc-btn" onclick="mcDone('+ei+')">Fait ✓</button>'+(nx?'<div class="mc-small">Ensuite : '+nx[1]+' à '+el(nx[0])+' de course</div>':'');}
   // point
-  let ri=MC_R.findIndex((r,i)=>i>st.p);const nx=document.getElementById('mc-next');const warn=document.getElementById('mc-warn');warn.innerHTML='';
-  if(ri<0){nx.innerHTML='<div class="mc-lab">Arrivée</div><div class="mc-big">Bravo !</div><div class="mc-txt">Médaille, couche sèche, boisson chaude. Tu l\'as fait.</div>';document.getElementById('mc-gap').textContent='';}
-  else{const r=MC_R[ri];const eta=new Date(MC_START.getTime()+(r[0]+st.shift)*60000);const dm=(eta-now)/60000;
-    nx.innerHTML='<div class="mc-lab">Prochain point</div><div class="mc-big">'+r[1]+'</div><div class="mc-mid">'+r[2]+' · '+(sm<0&&false?'':'vers '+hhmm(eta))+' · '+(dm>=0?'dans '+dur(dm):'attendu il y a '+dur(dm))+'</div><div class="mc-txt">'+r[3]+'</div><button class="mc-btn" onclick="mcPass('+ri+')">Passé ✓ (recale les heures)</button>';
-    const sh=st.shift;document.getElementById('mc-gap').textContent='Écart au plan 10h45 : '+(sh===0?'aucun':(sh>0?'+'+sh+' min (retard)':sh+' min (avance)'));
-    if(st.p>=0&&sh<-10)warn.innerHTML='<div class="mc-warn">Plus de 10 min d\'avance : ralentis, garde tes quadris pour la fin.</div>';
-    else if(st.p>=0&&sh>20&&ri<5)warn.innerHTML='<div class="mc-warn">Retard de plus de 20 min : ne rattrape rien avant le km 66. La barrière est à 16h30.</div>';}
+  const ri=MC_R.findIndex((r,i)=>i>st.p);const nx=document.getElementById('mc-next');const warn=document.getElementById('mc-warn');warn.innerHTML='';
+  if(st.fin!==null||ri<0){nx.innerHTML='<div class="mc-lab">Arrivée</div><div class="mc-big">Bravo !</div><div class="mc-txt">Médaille, couche sèche, boisson chaude. Tu l\'as fait.'+(st.fin!==null?' Temps : '+dur(st.fin)+'.':'')+'</div>';document.getElementById('mc-gap').textContent='';}
+  else{const r=MC_R[ri];const obj=r[0]+st.shift;
+    const line=started?(r[2]+' · '+(obj-sm>=0?'dans '+dur(obj-sm):'attendu depuis '+dur(obj-sm))+' · à '+el(obj)+' de course'):(r[2]+' · objectif '+el(obj)+' de course');
+    nx.innerHTML='<div class="mc-lab">Prochain point</div><div class="mc-big">'+r[1]+'</div><div class="mc-mid">'+line+'</div><div class="mc-txt">'+r[3]+'</div>'+(started?'<button class="mc-btn" onclick="mcPass('+ri+')">Passé ✓ (recale les heures)</button>':'');
+    const sh=st.shift;document.getElementById('mc-gap').textContent=started?'Écart au plan 10h45 : '+(sh===0?'aucun':(sh>0?'+'+sh+' min (retard)':sh+' min (avance)')):'';
+    if(started&&st.p>=0&&sh<-10)warn.innerHTML='<div class="mc-warn">Plus de 10 min d\'avance : ralentis, garde tes quadris pour la fin.</div>';
+    else if(started&&st.p>=0&&sh>20&&ri<5)warn.innerHTML='<div class="mc-warn">Retard de plus de 20 min : ne rattrape rien avant le km 66. La barrière est à 16h30.</div>';}
 }
 function show(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -1593,6 +1617,7 @@ function initUI(){
   }
   drawTodo();
   show('accueil');
+  const m0=mcLoad();if(m0.start&&m0.fin===null&&(Date.now()-m0.start)<20*3600000)openMC();
 }
 
 // ═══════════════ CHECKLIST ═══════════════
