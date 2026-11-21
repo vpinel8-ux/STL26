@@ -1,4 +1,4 @@
-const C='sl-v2';
+const C='sl-v3';
 self.addEventListener('install',e=>{self.skipWaiting();});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 // Réseau d'abord (4 s max) : tu vois toujours la dernière version ; sans réseau, copie gardée en mémoire

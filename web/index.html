@@ -263,14 +263,77 @@ body{font-size:16px;line-height:1.55}
 .leg ul{margin:6px 0 8px 20px;padding:0}.leg li{margin:5px 0;font-size:15px}
 .leg .iso{font-size:14px;margin-top:6px}.leg .tot{font-size:13px;color:var(--text-dim);margin-top:4px}
 .leg .rav{margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);font-size:14px}
+
+/* ═══ REFONTE 21 nov : accueil focalisé, en-tête compact, recherche ═══ */
+:root{--bg:#0b1020;--card:#131b30;--card2:#1a2440}
+body{background:var(--bg)}
+.hero{padding:16px 16px 14px;padding-top:calc(16px + env(safe-area-inset-top,0px));text-align:left;border-bottom:0;background:linear-gradient(160deg,#18264a 0%,#0e1630 100%)}
+.hero::before,.hero-label{display:none}
+.hero-title{font-size:26px;margin:0}
+.hero-sub{font-size:14px;margin:2px 0 12px;color:#c3cee0}
+.countdown-grid{max-width:none;display:flex;gap:8px}
+.countdown-box{flex:1;padding:8px 2px;text-align:center;background:rgba(255,255,255,.06);border:0}
+.countdown-num{font-size:26px}
+body:not(.home) .hero{display:none}
+#head{position:sticky;top:0;z-index:150;background:var(--bg)}
+.topbar{display:none;align-items:center;gap:10px;padding:10px 14px 6px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+body:not(.home) .topbar{display:flex}
+.topbar .tt{flex:1;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;line-height:1.1}
+.topbar .tj{font-size:14px;font-weight:700;color:var(--gold);background:rgba(245,158,11,.14);border-radius:20px;padding:5px 11px}
+.topbar .sb{background:var(--card2);border:0;border-radius:50%;width:40px;height:40px;font-size:18px;color:var(--text)}
+.nav{position:static;border:0;background:transparent;padding:4px 14px 10px;gap:8px}
+.nav-btn{border:0;background:var(--card2);color:#cfd8e8;border-radius:20px;font-size:14px;padding:8px 15px}
+.nav-btn.active{background:var(--trail);color:#fff}
+.card{background:var(--card);border:0;border-radius:16px;scroll-margin-top:120px}
+.card.flash{animation:fl 1.6s}
+@keyframes fl{0%,60%{box-shadow:0 0 0 3px var(--gold)}100%{box-shadow:0 0 0 0 transparent}}
+.upd{padding:9px 12px;font-size:13px!important;margin-bottom:10px;border-radius:12px}
+.searchbar{display:flex;width:100%;align-items:center;gap:10px;background:var(--card2);border:0;border-radius:14px;padding:13px 15px;color:#aebbd0;font-size:15px;font-family:inherit;text-align:left;margin-bottom:14px}
+.today{background:linear-gradient(135deg,#21345f,#16254a);border-radius:18px;padding:18px;margin-bottom:14px}
+.t-lab{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#f5c46a;font-weight:700}
+.t-main{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;line-height:1.2;margin:6px 0 4px}
+.t-sub{font-size:15px;color:#d5deee;line-height:1.5}
+.t-next{margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12);font-size:14px;color:#c3cee0}
+.t-next div{padding:3px 0}.t-next b{color:#7fb0ff;margin-right:8px;display:inline-block;min-width:52px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.tile{display:flex;align-items:center;gap:10px;background:var(--card);border:0;border-radius:14px;padding:14px 12px;color:var(--text);font-family:inherit;font-size:15px;font-weight:600;text-align:left;min-height:62px;position:relative}
+.tile span{font-size:26px;line-height:1}
+.tile.big{grid-column:1 / -1;background:linear-gradient(135deg,#1f4fd8,#2a6af0);font-size:17px;min-height:70px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chips div{background:var(--card);border-radius:12px;padding:9px 12px;font-size:14px;color:#cfd8e8}
+.chips b{color:var(--text)}
+.todo-item{font-size:16px;padding:12px 0}
+.todo-item input{width:22px;height:22px}
+.more{margin-top:8px;background:none;border:0;color:var(--trail);font-size:15px;font-family:inherit;padding:8px 0}
+details.card>summary{list-style:none;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;display:flex;align-items:center;gap:8px}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::after{content:'▾';margin-left:auto;color:var(--text-dim)}
+details.card[open]>summary::after{transform:rotate(180deg)}
+details.card[open]>summary{margin-bottom:10px}
+#srch{position:fixed;inset:0;z-index:400;background:var(--bg);display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.srch-top{display:flex;gap:10px;padding:12px 14px}
+#srch-in{flex:1;background:var(--card2);border:0;border-radius:14px;padding:13px 15px;font-size:17px;color:var(--text);font-family:inherit;outline:none}
+.srch-top button{background:none;border:0;color:var(--trail);font-size:16px;font-family:inherit}
+#srch-res{flex:1;overflow:auto;padding:0 14px 30px}
+.srch-r{background:var(--card);border-radius:14px;padding:13px 14px;margin-bottom:10px}
+.srch-r b{display:block;font-size:16px}.srch-r i{font-style:normal;font-size:12px;color:var(--gold);text-transform:uppercase;letter-spacing:.05em}
+.srch-r small{display:block;margin-top:5px;font-size:13px;color:#aebbd0;line-height:1.4}
+.srch-hint{color:#aebbd0;font-size:15px;padding:16px 4px;line-height:1.5}
+.fc-big{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fc-big div{background:var(--card2);border-radius:14px;padding:12px}
+.fc-big small{display:block;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#aebbd0}
+.fc-big b{display:block;font-family:'Space Grotesk',sans-serif;font-size:22px;margin-top:3px}
+.rule{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:16px;line-height:1.45}
+.rule:last-child{border:0}.rule b.n{flex:0 0 28px;height:28px;border-radius:50%;background:var(--trail);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px}
+.prises{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:15px}
+.prises div{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05)}.prises b{color:var(--gold);margin-right:6px}
 </style>
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a0e1a"></head>
 <body>
 
 <div class="hero">
-  <div class="hero-label">72e édition · Préparation personnalisée</div>
   <h1 class="hero-title">Saintelyon 2026</h1>
-  <p class="hero-sub">Saint-Étienne → Lyon · 80,6 km · départ 00h00 (vague 3) · Vincent</p>
+  <p class="hero-sub">Départ dim. 29 nov · 00h00 (vague 3) · objectif 10h45</p>
   <div class="countdown-grid">
     <div class="countdown-box"><div class="countdown-num" id="cd-j">--</div><div class="countdown-label">Jours</div></div>
     <div class="countdown-box"><div class="countdown-num" id="cd-h">--</div><div class="countdown-label">Heures</div></div>
@@ -279,26 +342,26 @@ body{font-size:16px;line-height:1.55}
   </div>
 </div>
 
-<nav class="nav" id="subnav"></nav>
+<div id="head"><div class="topbar"><div class="tt" id="tb-title"></div><div class="tj" id="tb-j"></div><button class="sb" onclick="openSearch()" aria-label="Chercher">🔍</button></div><nav class="nav" id="subnav"></nav></div>
 <div class="tabbar" id="tabbar"></div>
+<div id="srch"><div class="srch-top"><input id="srch-in" type="search" placeholder="Chercher : ravito, gel, tibia, froid…" oninput="doSearch(this.value)" autocomplete="off"><button onclick="closeSearch()">Fermer</button></div><div id="srch-res"></div></div>
+
 
 <section id="accueil" class="section active">
-  <div class="card"><div class="card-title">🆕 Mises à jour</div><div id="upd-list"></div></div>
-  <div class="card"><div class="card-title">🗓️ Prochains jours</div><div id="next-days"></div></div>
-  <div class="card"><div class="card-title">✅ À faire avant le 28</div><div id="todo"></div></div>
-  <div class="card"><div class="card-title">🎯 Course en un coup d'œil</div>
-    <div class="stat-row"><div class="stat-label">Départ</div><div class="stat-value" style="font-size:12px">Nuit sam. 28 → dim. 29 nov · 00h00 (vague 3) · Parc Expo St-Étienne</div></div>
-    <div class="stat-row"><div class="stat-label">Objectif</div><div class="stat-value" style="font-size:12px">10h45 (fourchette 10h30 → 11h15)</div></div>
-    <div class="stat-row"><div class="stat-label">Allure</div><div class="stat-value" style="font-size:12px">7'30 → 8'30"/km</div></div>
-    <div class="stat-row"><div class="stat-label">FC</div><div class="stat-value" style="font-size:12px">125-132 · alarme 132 · marche si &gt; 135 en montée</div></div>
-    <div class="stat-row"><div class="stat-label">Glucides</div><div class="stat-value" style="font-size:12px">45-60 g/h · une prise toutes les 40-45 min</div></div>
-    <div class="stat-row"><div class="stat-label">Barrière finale</div><div class="stat-value" style="font-size:12px">16h30 à Lyon</div></div>
-    <div class="stat-row"><div class="stat-label">Urgence course</div><div class="stat-value" style="font-size:12px">09 72 45 60 02</div></div>
-    <div class="alert alert-danger" style="margin:10px 0 0">🚫 Assistance perso aux ravitos interdite · bâtons interdits · pas de déchet à +100 m d'un ravito</div>
+  <button class="searchbar" onclick="openSearch()"><span>🔍</span> Chercher une info (ravito, gel, tibia, sas…)</button>
+  <div class="today" id="today"></div>
+  <div class="tiles">
+    <button class="tile big" onclick="show('essentiel')"><span>🏁</span>Fiche course : tout l'essentiel</button>
+    <button class="tile" onclick="show('nutrition')"><span>🍯</span>Nutrition de course</button>
+    <button class="tile" onclick="show('repas')"><span>🍽️</span>Repas</button>
+    <button class="tile" onclick="show('sommeil')"><span>🛏️</span>Sommeil</button>
+    <button class="tile" onclick="show('materiel')"><span>🎒</span>Sac et matériel</button>
+    <button class="tile" onclick="show('meteo')"><span>⛅</span>Météo et tenue</button>
+    <button class="tile" onclick="show('troncons')"><span>🦵</span>Plan tibia</button>
   </div>
-  <div class="card"><div class="card-title">⚡ Accès rapide</div><div class="quick">
-    <button onclick="show('strategie')">🎯 Stratégie</button><button onclick="show('parcours')">⏱️ Plan de passage</button><button onclick="show('ravitos')">⛺ Ravitos</button><button onclick="show('nutrition')">🍯 Nutrition</button><button onclick="show('hydratation')">🥤 Boire</button><button onclick="show('materiel')">🎒 Matériel</button>
-  </div></div>
+  <div class="chips"><div><b>00h00</b> vague 3</div><div>Objectif <b>10h45</b></div><div>FC <b>125-132</b></div></div>
+  <div class="card"><div class="card-title">✅ À faire <span class="badge badge-blue" id="todo-count"></span></div><div id="todo"></div></div>
+  <details class="card" id="upd-box"><summary>🆕 Nouveautés <span id="upd-n"></span></summary><div id="upd-list"></div></details>
 </section>
 
 <!-- ═══════════════════════════════════ PLANNING ═══════════════════════════════════ -->
@@ -858,6 +921,53 @@ body{font-size:16px;line-height:1.55}
   </div>
 </section>
 
+<section id="essentiel" class="section" data-open="1">
+  <div class="card"><div class="card-title">🎯 Les 4 chiffres</div><div class="fc-big">
+    <div><small>Départ</small><b>00h00</b>vague 3 · Parc Expo</div>
+    <div><small>Objectif</small><b>10h45</b>10h30 → 11h15</div>
+    <div><small>FC</small><b>125-132</b>alarme 132 · marche &gt; 135</div>
+    <div><small>Manger</small><b>40 min</b>1 prise + isotonique</div>
+  </div></div>
+
+  <div class="card"><div class="card-title">⏱️ Passages et gestes</div><table class="table"><thead><tr><th>Point</th><th>Heure</th><th>Au ravito</th></tr></thead><tbody>
+    <tr><td><strong>St-Christo</strong> km 17</td><td><strong>02h15</strong></td><td>Isotonique neuf, soupe · 3 min</td></tr>
+    <tr><td><strong>Ste-Catherine</strong> km 33</td><td><strong>04h15</strong></td><td>Couche chaude, coca ou café · 5 min</td></tr>
+    <tr><td><strong>Le Signal</strong> km 42</td><td><strong>05h45</strong></td><td>Gommes avant la descente</td></tr>
+    <tr><td><strong>Le Camp</strong> km 46</td><td><strong>06h10</strong></td><td>Isotonique neuf, soupe · 4 min</td></tr>
+    <tr><td><strong>Soucieu</strong> km 60</td><td><strong>08h05</strong></td><td>Café, ranger la frontale · décision tibia</td></tr>
+    <tr><td><strong>Chaponost</strong> km 66</td><td><strong>08h50</strong></td><td>Eau seulement, puis relance</td></tr>
+    <tr><td><strong>Lyon</strong> km 80,6</td><td><strong>10h45</strong></td><td>Halle Tony Garnier</td></tr>
+  </tbody></table></div>
+
+  <div class="card"><div class="card-title">🍯 Les prises (gel et gommes en alternance)</div><div class="prises">
+    <div><b>23h45</b>Gel</div><div><b>00h25</b>Gommes</div>
+    <div><b>01h05</b>Gel</div><div><b>01h45</b>Gommes</div>
+    <div><b>02h25</b>Gel</div><div><b>03h05</b>Gommes</div>
+    <div><b>03h45</b>Gel</div><div><b>04h25</b>Gommes</div>
+    <div><b>05h05</b>Gel</div><div><b>05h45</b>Gommes</div>
+    <div><b>06h25</b>Gel caféiné</div><div><b>07h05</b>Gommes</div>
+    <div><b>07h45</b>Gel caféiné</div><div><b>08h25</b>Gommes</div>
+    <div><b>09h05</b>Gel caféiné</div><div><b>09h45</b>Gommes</div>
+  </div><div style="font-size:14px;color:var(--text-dim);margin-top:10px">Isotonique : 250 ml par heure, flasque refaite à chaque ravito (sauf Chaponost : eau). Alarme montre : 1er bip tu bois, 2e bip tu bois et tu manges.</div></div>
+
+  <div class="card"><div class="card-title">📌 Les 7 règles</div>
+    <div class="rule"><b class="n">1</b><div>FC au-dessus de 135 en montée : <strong>tu marches</strong>, sans discuter.</div></div>
+    <div class="rule"><b class="n">2</b><div>Les 3 premiers km de la grande descente (après le Signal) : effort 4/10, pas courts.</div></div>
+    <div class="rule"><b class="n">3</b><div>Retard sur le plan : tu ne rattrapes rien avant le km 66.</div></div>
+    <div class="rule"><b class="n">4</b><div>Froid ou frissons : <strong>2e couche tout de suite</strong>, pas au ravito suivant.</div></div>
+    <div class="rule"><b class="n">5</b><div>Nausée : stop gels 30 min, puis bouillon et coca dégazé.</div></div>
+    <div class="rule"><b class="n">6</b><div>Tibia ou genou : douleur à 5/10 ou foulée modifiée, tu t'arrêtes au prochain ravito.</div></div>
+    <div class="rule"><b class="n">7</b><div>Assistance interdite aux ravitos. Bâtons interdits. Aucun déchet à plus de 100 m d'un ravito.</div></div>
+  </div>
+
+  <div class="card"><div class="card-title">🆘 Urgence et abandon</div>
+    <div class="stat-row"><div class="stat-label">Urgence course</div><div class="stat-value"><strong>09 72 45 60 02</strong></div></div>
+    <div class="stat-row"><div class="stat-label">Danger vital</div><div class="stat-value"><strong>112</strong></div></div>
+    <div class="stat-row"><div class="stat-label">Abandon</div><div class="stat-value">Navette depuis un ravito. Abandonner à Soucieu ou Chaponost reste une bonne décision.</div></div>
+    <div class="quick" style="margin-top:10px"><button onclick="show('strategie')">🛟 Plans B</button><button onclick="show('troncons')">🦵 Plan tibia</button></div>
+  </div>
+</section>
+
 <section id="troncons" class="section">
   <div class="alert alert-info">Scénario <strong>10h45</strong>. Les horaires sont depuis le départ à 00h00. Les allures incluent les arrêts aux ravitos. FC cible 125-132, alarme à 132 bpm.</div>
 
@@ -1314,6 +1424,7 @@ function updateCountdown() {
   const now = new Date();
   const diff = race - now;
   if (diff <= 0) { ['cd-j','cd-h','cd-m','cd-s'].forEach(id => document.getElementById(id).textContent = '0'); return; }
+  const tj=document.getElementById('tb-j');if(tj){const dj=Math.round((new Date(2026,10,28)-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/864e5);tj.textContent=dj>0?'J-'+dj:'JOUR J';}
   document.getElementById('cd-j').textContent = Math.floor(diff/86400000);
   document.getElementById('cd-h').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
   document.getElementById('cd-m').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
@@ -1324,11 +1435,11 @@ setInterval(updateCountdown, 1000);
 
 // ═══════════════ NAV ═══════════════
 const GROUPS=[
- {k:'home',i:'🏠',t:'Accueil',s:[['accueil','Accueil']]},
- {k:'prepa',i:'📅',t:'Prépa',s:[['planning','Planning'],['repas','Repas'],['batch','Batch'],['sommeil','Sommeil'],['achats','Achats'],['zones','Zones FC'],['objectif','Objectif']]},
- {k:'course',i:'🏁',t:'Course',s:[['strategie','Stratégie'],['parcours','Parcours'],['troncons','Tronçons'],['ravitos','Ravitos'],['meteo','Météo']]},
+ {k:'home',i:'🏠',t:'Aujourd\'hui',s:[['accueil','Aujourd\'hui']]},
+ {k:'prepa',i:'📅',t:'Semaine',s:[['planning','Planning'],['repas','Repas'],['batch','Batch'],['achats','Achats'],['sommeil','Sommeil']]},
+ {k:'course',i:'🏁',t:'Course',s:[['essentiel','Fiche course'],['troncons','Tronçons'],['strategie','Stratégie'],['parcours','Parcours'],['ravitos','Ravitos'],['meteo','Météo']]},
  {k:'nutri',i:'🍯',t:'Nutrition',s:[['nutrition','Plan'],['hydratation','Boire']]},
- {k:'matos',i:'🎒',t:'Matos',s:[['materiel','Matériel'],['montre','Montre'],['infos','Infos orga']]}
+ {k:'matos',i:'🎒',t:'Plus',s:[['materiel','Matériel'],['montre','Montre'],['infos','Infos orga'],['zones','Zones FC'],['objectif','Objectif']]}
 ];
 const UPDATES=[
  {id:'planning',k:'2026-11-16a',d:'16 nov',t:'Semaine du 16 au 22 : hockey mardi et jeudi, répétition générale vendredi'},
@@ -1355,6 +1466,7 @@ const UPDATES=[
  {id:'materiel',k:'2026-11-18i',d:'18 nov',t:'Nouveau : mon sac de course, où ranger quoi (pochettes par tronçon)'},
  {id:'planning',k:'2026-11-19a',d:'19 nov',t:'Vendredi : répétition à sec sans courir · match de samedi à décider selon la jambe'},
  {id:'infos',k:'2026-11-20a',d:'20 nov',t:'Proches : assistance interdite, lieux et heures pour t\'encourager'},
+ {id:'essentiel',k:'2026-11-21i',d:'21 nov',t:'Nouvelle app : accueil simplifié, Fiche course en une page, recherche'},
  {id:'infos',k:'2026-11-21g',d:'21 nov',t:'Jour J : arrivée au Parc Expo vers 21h30, entrée dans le SAS 3 dès 22h45 pour être près de l\'arche'},
  {id:'troncons',k:'2026-11-21h',d:'21 nov',t:'Courir ou marcher dans les montées : règle et tableau par montée'},
  {id:'troncons',k:'2026-11-21d',d:'21 nov',t:'Nouveau : fiche tronçon par tronçon, plan tibia et PacePro'},
@@ -1362,7 +1474,7 @@ const UPDATES=[
  {id:'batch',k:'2026-11-21c',d:'21 nov',t:'Batch cooking : 12 repas complets midi et soir du lundi au samedi, en 2 sessions'},
  {id:'repas',k:'2026-11-17g',d:'17 nov',t:'Jour J : repas du soir décalés pour un départ à 00h00'}
 ];
-const LABEL={planning:'Planning',nutrition:'Nutrition · Plan',hydratation:'Nutrition · Boire',achats:'Achats',materiel:'Matériel',repas:'Repas',batch:'Batch cooking',troncons:'Tronçons',sommeil:'Sommeil · Test',strategie:'Stratégie',parcours:'Parcours',ravitos:'Ravitos',infos:'Infos orga',montre:'Montre',zones:'Zones FC',objectif:'Objectif',meteo:'Météo'};
+const LABEL={essentiel:'Fiche course',planning:'Planning',nutrition:'Nutrition · Plan',hydratation:'Nutrition · Boire',achats:'Achats',materiel:'Matériel',repas:'Repas',batch:'Batch cooking',troncons:'Tronçons',sommeil:'Sommeil · Test',strategie:'Stratégie',parcours:'Parcours',ravitos:'Ravitos',infos:'Infos orga',montre:'Montre',zones:'Zones FC',objectif:'Objectif',meteo:'Météo'};
 function seenMap(){try{return JSON.parse(localStorage.getItem('sl_seen')||'{}')}catch(e){return {}}}
 function lastUpd(id){const l=UPDATES.filter(u=>u.id===id);return l.length?l[l.length-1]:null}
 function isNew(id){const u=lastUpd(id);return !!u&&seenMap()[id]!==u.k}
@@ -1374,9 +1486,23 @@ function refreshUpd(){
     const d=b.querySelector('.dot'); const n=g.s.some(x=>isNew(x[0]));
     if(n&&!d)b.insertAdjacentHTML('beforeend',DOT); if(!n&&d)d.remove();
   });
+  const nn=[...new Set(UPDATES.map(u=>u.id))].filter(isNew).length;const ne=document.getElementById('upd-n');if(ne)ne.innerHTML=nn?DOT+' '+nn+' nouveauté'+(nn>1?'s':''):'';
   const box=document.getElementById('upd-list'); if(!box)return;
   box.innerHTML=UPDATES.slice().reverse().map(u=>`<div class="nd" style="cursor:pointer" onclick="show('${u.id}')"><b style="min-width:0">${LABEL[u.id]||u.id}${isNew(u.id)?DOT:''}</b><small style="margin-left:0">${u.d} · ${u.t}</small></div>`).join('');
 }
+
+function nz(s){return s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase()}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+let SIDX=null;
+function buildIdx(){SIDX=[];document.querySelectorAll('.section').forEach(sec=>{if(sec.id==='accueil')return;const g=GROUPS.find(g=>g.s.some(x=>x[0]===sec.id));const lab=g?((g.s.find(x=>x[0]===sec.id)||[])[1]||sec.id):sec.id;sec.querySelectorAll(':scope > .card').forEach(c=>{const t=c.querySelector(':scope > .card-title');const title=(t?t.textContent:'').replace(/\s+/g,' ').trim();const body=c.innerHTML.replace(/<(br|\/div|\/td|\/th|\/tr|\/li|\/p|\/h\d|\/b|\/strong)[^>]*>/gi,' ').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/\s+/g,' ').trim();SIDX.push({sec:sec.id,lab:lab,title:title,body:body,nt:nz(title),nb:nz(body),el:c});});});}
+function openSearch(){if(!SIDX)buildIdx();document.getElementById('srch').style.display='flex';const i=document.getElementById('srch-in');i.value='';doSearch('');setTimeout(()=>i.focus(),60);}
+function closeSearch(){document.getElementById('srch').style.display='none';}
+function doSearch(q){const box=document.getElementById('srch-res');const n=nz(q.trim());if(n.length<2){box.innerHTML='<div class="srch-hint">Tape un mot : ravito, gel, tibia, froid, sas, sommeil, batch…</div>';return;}
+  const terms=n.split(/\s+/);
+  const res=SIDX.filter(x=>terms.every(t=>x.nb.includes(t)||x.nt.includes(t))).map(x=>({x:x,s:terms.every(t=>x.nt.includes(t))?2:0})).sort((a,b)=>b.s-a.s).slice(0,25);
+  box.innerHTML=res.length?res.map(r=>{const x=r.x;const p=x.nb.indexOf(terms[0]);let sn='';if(p>=0){const st=Math.max(0,p-40);sn=(st>0?'…':'')+esc(x.body.slice(st,p+100))+'…';}
+    return '<div class="srch-r" onclick="goCard('+SIDX.indexOf(x)+')"><i>'+esc(x.lab)+'</i><b>'+esc(x.title||x.lab)+'</b><small>'+sn+'</small></div>';}).join(''):'<div class="srch-hint">Rien trouvé. Essaie un autre mot.</div>';}
+function goCard(i){const x=SIDX[i];closeSearch();show(x.sec);x.el.classList.remove('closed');setTimeout(()=>{x.el.scrollIntoView({behavior:'smooth',block:'start'});x.el.classList.add('flash');setTimeout(()=>x.el.classList.remove('flash'),1700)},80);}
 function show(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -1385,40 +1511,53 @@ function show(id){
   const sn=document.getElementById('subnav');
   sn.innerHTML=g.s.length>1?g.s.map(x=>`<button class="nav-btn${x[0]===id?' active':''}" onclick="show('${x[0]}')">${x[1]}${isNew(x[0])&&x[0]!==id?DOT:''}</button>`).join(''):'';
   if(id!=='accueil')markSeen(id);
+  document.body.classList.toggle('home',id==='accueil');
+  const cur=g.s.find(x=>x[0]===id);const tt=document.getElementById('tb-title');if(tt)tt.textContent=cur?cur[1]:'';
   refreshUpd();
   window.scrollTo(0,0);
 }
 function initUI(){
   document.getElementById('tabbar').innerHTML=GROUPS.map(g=>`<button data-k="${g.k}" onclick="show('${g.s[0][0]}')"><span>${g.i}</span>${g.t}</button>`).join('');
-  UPDATES.forEach(u=>{const sec=document.getElementById(u.id); if(!sec||lastUpd(u.id)!==u||sec.querySelector('.upd'))return; sec.insertAdjacentHTML('afterbegin',`<div class="alert alert-success upd">🆕 Mis à jour le ${u.d} : ${u.t}</div>`);});
+  UPDATES.forEach(u=>{const sec=document.getElementById(u.id); if(!sec||lastUpd(u.id)!==u||sec.querySelector('.upd')||!isNew(u.id))return; sec.insertAdjacentHTML('afterbegin',`<div class="alert alert-success upd">🆕 Mis à jour le ${u.d} : ${u.t}</div>`);});
   document.querySelectorAll('.section').forEach(sec=>{
     if(sec.id==='accueil')return;
     [...sec.children].filter(c=>c.classList.contains('card')).forEach((c,i)=>{
       const t=c.querySelector(':scope > .card-title'); if(!t)return;
       const body=document.createElement('div'); body.className='cbody';
       [...c.children].filter(x=>x!==t).forEach(x=>body.appendChild(x));
-      c.appendChild(body); c.classList.add('collapsible'); if(i>0)c.classList.add('closed');
+      c.appendChild(body); c.classList.add('collapsible'); if(i>0&&!sec.dataset.open)c.classList.add('closed');
       t.onclick=()=>c.classList.toggle('closed');
     });
   });
-  // prochains jours
+  // aujourd'hui
   const D=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
   const rows={};
   document.querySelectorAll('#planning .day-row').forEach(r=>{rows[r.querySelector('.day-name').textContent.trim()]=r;});
-  const now=new Date(); let out='';
-  for(let k=0;k<6;k++){
+  const now=new Date();
+  const day0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const jx=Math.round((new Date(2026,10,28)-day0)/864e5);
+  const MOIS=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+  const JL=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+  let main='',sub='',next='';
+  for(let k=0;k<5;k++){
     const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+k);
     const key=D[d.getDay()]+' '+d.getDate(); const r=rows[key]; if(!r)continue;
-    const dt=r.querySelector('.day-detail');
-    out+=`<div class="nd${k===0?' today':''}"><b>${k===0?'Aujourd\'hui':key}</b>${r.querySelector('.day-title').innerHTML}${dt?'<small>'+dt.innerHTML+'</small>':''}</div>`;
+    const t=r.querySelector('.day-title').innerHTML, dt=r.querySelector('.day-detail');
+    if(k===0){main=t;sub=dt?dt.innerHTML:'';} else next+='<div><b>'+key+'</b>'+t+'</div>';
   }
-  document.getElementById('next-days').innerHTML=out||'<div class="nd">Plus de séance prévue au planning.</div>';
-  // todo
-  const items=['Commande TA passée / gels reçus','Courses de la semaine de taper','Répétition générale ven 20 (tenue + gel + montre)','Montre : GPX importé, ClimbPro, alarme FC 132','Sac de course prêt (matériel obligatoire)','Retrait dossard ven 27 (12h → 19h)','Montre + frontale chargées à 100 % la veille','Météo : ajuster la tenue le mer. 25 et le ven. 27','Prévenir ton proche : dépose ~21h au Parc Expo, retour à la Halle vers 11h'];
-  let st={}; try{st=JSON.parse(localStorage.getItem('sl_todo')||'{}')}catch(e){}
-  const box=document.getElementById('todo');
-  box.innerHTML=items.map((t,i)=>`<label class="todo-item${st[i]?' done':''}"><input type="checkbox" data-i="${i}"${st[i]?' checked':''}><span>${t}</span></label>`).join('');
-  box.querySelectorAll('input').forEach(c=>c.onchange=()=>{st[c.dataset.i]=c.checked;c.parentNode.classList.toggle('done',c.checked);try{localStorage.setItem('sl_todo',JSON.stringify(st))}catch(e){}});
+  document.getElementById('today').innerHTML='<div class="t-lab">'+JL[now.getDay()]+' '+now.getDate()+' '+MOIS[now.getMonth()]+' · '+(jx>0?'J-'+jx:(jx===0?'JOUR J':'course terminée'))+'</div><div class="t-main">'+(main||'Rien de prévu au planning')+'</div>'+(sub?'<div class="t-sub">'+sub+'</div>':'')+(next?'<div class="t-next">'+next+'</div>':'');
+  // à faire
+  const items=['Commandes reçues (TA Energy, Odlo)','Avis de l\'ostéo mardi 24 · test tibia jeudi 26','Batch cooking, session 1 (dim. 22)','Test à blanc du sac et de la tenue (dim. 22 ou lun. 23)','Montre : PacePro, GPX, alarme FC 132','Batch cooking, session 2 (mer. 25 au soir)','Météo : ajuster la tenue mer. 25 et ven. 27','Retrait du dossard ven. 27 (12h-19h)','Sac de course prêt + sac de Lyon (étiquette dossard)','Écrire à l\'organisation : fermeture du sas 3, règle d\'assistance','Prévenir ton proche : fiche A5, départ ~20h, Parc Expo 21h30','Montre et frontale chargées à 100 % (sam. 28)'];
+  let st={}; try{st=JSON.parse(localStorage.getItem('sl_todo2')||'{}')}catch(e){}
+  const box=document.getElementById('todo'); let all=false;
+  function drawTodo(){
+    const idx=items.map((t,i)=>i).sort((a,b)=>(st[a]?1:0)-(st[b]?1:0)||a-b);
+    box.innerHTML=idx.map((i,n)=>'<label class="todo-item'+(st[i]?' done':'')+'"'+((!all&&n>=4)?' style="display:none"':'')+'><input type="checkbox" data-i="'+i+'"'+(st[i]?' checked':'')+'><span>'+items[i]+'</span></label>').join('')+'<button class="more" id="todo-more">'+(all?'Replier':'Tout voir ('+items.length+')')+'</button>';
+    box.querySelectorAll('input').forEach(c=>c.onchange=()=>{st[c.dataset.i]=c.checked;try{localStorage.setItem('sl_todo2',JSON.stringify(st))}catch(e){};drawTodo();});
+    document.getElementById('todo-more').onclick=()=>{all=!all;drawTodo();};
+    document.getElementById('todo-count').textContent=items.filter((t,i)=>st[i]).length+'/'+items.length;
+  }
+  drawTodo();
   show('accueil');
 }
 
